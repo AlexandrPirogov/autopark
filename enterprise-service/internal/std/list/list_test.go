@@ -35,7 +35,7 @@ func TestAddInEmptyList(t *testing.T) {
 	sut := New[Integer]()
 	insert := node[Integer]{nil, 10}
 
-	sut.AddInTail(insert)
+	sut.Add(insert)
 
 	assert.Equal(t, sut.Count(), 1)
 	assert.Equal(t, sut.head, sut.tail)
@@ -54,7 +54,7 @@ func TestAddManyList(t *testing.T) {
 
 	for _, edge := range tests {
 		t.Run(fmt.Sprintf("%d", edge.value), func(t *testing.T) {
-			sut.AddInTail(edge)
+			sut.Add(edge)
 			assert.Equal(t, sut.tail, &edge)
 		})
 	}
@@ -66,7 +66,7 @@ func TestFindInSetList(t *testing.T) {
 	sut := New[Integer]()
 	var i Integer
 	for i = 0; i < 10; i++ {
-		sut.AddInTail(node[Integer]{nil, i})
+		sut.Add(node[Integer]{nil, i})
 	}
 
 	for i = 0; i < 10; i++ {
@@ -91,7 +91,7 @@ func TestFindInList(t *testing.T) {
 	sut := New[Integer]()
 	var i Integer
 	for i = 0; i < 10; i++ {
-		sut.AddInTail(node[Integer]{nil, duplicate})
+		sut.Add(node[Integer]{nil, duplicate})
 	}
 
 	for i = 0; i < 10; i++ {

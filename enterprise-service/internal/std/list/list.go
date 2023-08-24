@@ -30,12 +30,12 @@ func New[T std.StdComparable[T]]() *list[T] {
 	}
 }
 
-// AddInTail adds given elem at the tail
+// Add adds given elem at the tail
 //
 // Pre-cond: given element to add
 //
 // Post-cond: list's tail now is equal to given element
-func (l *list[T]) AddInTail(item node[T]) {
+func (l *list[T]) Add(item node[T]) {
 	if l.head == nil {
 		l.head = &item
 	} else {
