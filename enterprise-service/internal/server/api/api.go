@@ -8,7 +8,7 @@ import "net/http"
 //
 // Post-cond: new enterprise entity for created for system
 func RegisterEnterprise(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 }
 
 // Delete removes given enterprise entity from system
@@ -16,8 +16,8 @@ func RegisterEnterprise(w http.ResponseWriter, r *http.Request) {
 // Pre-cond: given existing enterprise to remove
 //
 // Post-cond: enterprise was removed from system
-func Delete(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+func DeleteEnterprise(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNoContent)
 }
 
 // Read read all existing enterprises in system by given pattern
@@ -25,10 +25,16 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 // Pre-cond: given pattern for enterprises
 //
 // Post-cond: returns list of matched enterprises
-func Read(w http.ResponseWriter, r *http.Request) {
+func ReadEnerprises(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func Update(w http.ResponseWriter, r *http.Request) {
+// Update updates existing enterprise entity in system
+//
+// Pre-cond: given enterprise pattern to update and new params for them
+//
+// Post-cond: all enterprises that matches the given pattern was update
+// with given new params
+func UpdateEnterprises(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
