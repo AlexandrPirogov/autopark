@@ -11,7 +11,7 @@ type EntepriseStorer interface {
 	Delete(e enterprise.Enterprise) error
 	Read(e enterprise.Enterprise) (std.Linked[enterprise.Enterprise], error)
 	Store(e enterprise.Enterprise) error
-	Update(e EntepriseStorer) (std.Linked[enterprise.Enterprise], error)
+	Update(e enterprise.Enterprise) (std.Linked[enterprise.Enterprise], error)
 }
 
 // Delete removes all enterprise entities from given EnterpriseStore which mathces given pattern
@@ -46,6 +46,6 @@ func Store(e enterprise.Enterprise, s EntepriseStorer) error {
 // Pre-cond: given pattern and EnterpriseStorer to update enterprise entities
 //
 // Post-cond: all enterprises which matches given pattern was updated within given EnterpriseStorer
-func Update(e EntepriseStorer, s EntepriseStorer) (std.Linked[enterprise.Enterprise], error) {
-	return s.Update(e)
+func Update(pattern enterprise.Enterprise, s EntepriseStorer) (std.Linked[enterprise.Enterprise], error) {
+	return s.Update(pattern)
 }
