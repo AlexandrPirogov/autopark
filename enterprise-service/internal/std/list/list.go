@@ -35,7 +35,8 @@ func New[T std.StdComparable[T]]() *list[T] {
 // Pre-cond: given element to add
 //
 // Post-cond: list's tail now is equal to given element
-func (l *list[T]) Add(item node[T]) {
+func (l *list[T]) Add(t T) {
+	item := node[T]{next: nil, value: t}
 	if l.head == nil {
 		l.head = &item
 	} else {
@@ -66,6 +67,24 @@ func (l *list[T]) Count() int {
 
 	iter(pred, act)
 	return count
+}
+
+// PopFront removes head of the list and returns item
+//
+// Pre-cond:
+//
+// Post-cond: if list isn't empty then returns value of head and true
+// and moves head to the next elem
+// Otherwise returns default value and false
+func (l *list[T]) PopFront() (T, bool) {
+	var def T
+	if l == nil || l.head == nil {
+		return def, false
+	}
+
+	def = l.head.value
+	l.head = l.head.next
+	return def, true
 }
 
 // Find searches for given value in list
