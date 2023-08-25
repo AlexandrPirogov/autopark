@@ -6,3 +6,5 @@ services:
       POSTGRES_PASSWORD: root
     ports:
       - 10000:10000
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
