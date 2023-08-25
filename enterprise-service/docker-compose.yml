@@ -1,0 +1,8 @@
+services:
+   enterprise-db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: root
+    ports:
+      - 10000:10000
