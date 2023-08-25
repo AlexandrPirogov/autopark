@@ -1,6 +1,13 @@
 package api
 
-import "net/http"
+import (
+	"encoding/json"
+	"enterprise-service/internal/db"
+	"enterprise-service/internal/enterprise"
+	"enterprise-service/internal/kernel"
+	"io"
+	"net/http"
+)
 
 // RegisterEnterprise creates new enterprise entity in system
 //
@@ -8,6 +15,25 @@ import "net/http"
 //
 // Post-cond: new enterprise entity for created for system
 func RegisterEnterprise(w http.ResponseWriter, r *http.Request) {
+	var e enterprise.Enterprise
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	marhsalErr := json.Unmarshal(body, &e)
+	if marhsalErr != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	storeErr := kernel.Store(e, db.GetConnInstance())
+	if storeErr != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	w.WriteHeader(http.StatusCreated)
 }
 
