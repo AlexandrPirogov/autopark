@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"enterprise-service/internal/server/api"
 	"net"
 	"net/http"
 
@@ -17,9 +18,18 @@ type server struct {
 	http *http.Server
 }
 
+func (s *server) ListenAndServe() error {
+	return s.http.ListenAndServe()
+}
+
+func (s *server) ShutDown(ctx context.Context) error {
+	return s.http.Shutdown(ctx)
+}
+
 func New(ctx context.Context) *server {
 	r := chi.NewRouter()
 
+	r.HandleFunc("/register", api.RegisterEnterprise)
 	return &server{
 		http: &http.Server{
 			Addr:        ":8080",
