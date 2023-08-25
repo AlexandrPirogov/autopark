@@ -6,6 +6,7 @@ import (
 	"enterprise-service/internal/enterprise"
 	"enterprise-service/internal/kernel"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -52,7 +53,43 @@ func DeleteEnterprise(w http.ResponseWriter, r *http.Request) {
 //
 // Post-cond: returns list of matched enterprises
 func ReadEnerprises(w http.ResponseWriter, r *http.Request) {
+	var e enterprise.Enterprise
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	marhsalErr := json.Unmarshal(body, &e)
+	if marhsalErr != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	list, storeErr := kernel.Read(e, db.GetConnInstance())
+	if storeErr != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	responseBody := []byte{}
+	for {
+		item, ok := list.PopFront()
+		if !ok {
+			break
+		}
+
+		marshaled, err := json.Marshal(item)
+		if err != nil {
+			continue
+		}
+
+		responseBody = append(responseBody, marshaled...)
+	}
+
 	w.WriteHeader(http.StatusOK)
+	w.Write(responseBody)
 }
 
 // Update updates existing enterprise entity in system
