@@ -4,6 +4,7 @@ import (
 	"context"
 	"enterprise-service/internal/enterprise"
 	"enterprise-service/internal/std"
+	"enterprise-service/internal/std/list"
 	"log"
 	"sync"
 
@@ -50,7 +51,24 @@ func (pg *pgconn) Delete(e enterprise.Enterprise) error {
 }
 
 func (pg *pgconn) Read(e enterprise.Enterprise) (std.Linked[enterprise.Enterprise], error) {
-	return nil, nil
+	rows, err := pg.conn.Query(context.Background(), QueryReadEnterprises)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	res := list.New[enterprise.Enterprise]()
+	for rows.Next() {
+		var e enterprise.Enterprise
+		scanErr := rows.Scan(&e.Title)
+		if scanErr != nil {
+			log.Println(err)
+			continue
+		}
+		res.Add(e)
+	}
+
+	return res, nil
 }
 
 func (pg *pgconn) Store(e enterprise.Enterprise) error {
