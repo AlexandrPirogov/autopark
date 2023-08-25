@@ -32,12 +32,16 @@ func new() *pgconn {
 }
 
 func tryConnect() *pgxpool.Pool {
-	URL := "postgresql://root:root@localhost:10000/postgres"
+	URL := "postgresql://postgres:postgres@localhost:10000/postgres"
 	conn, err := pgxpool.New(context.Background(), URL)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	ping := conn.Ping(context.Background())
+	if ping != nil {
+		log.Fatalf("error while pinging %v", ping)
+	}
 	return conn
 }
 
