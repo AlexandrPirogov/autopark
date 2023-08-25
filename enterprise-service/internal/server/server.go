@@ -30,6 +30,7 @@ func New(ctx context.Context) *server {
 	r := chi.NewRouter()
 
 	r.HandleFunc("/register", api.RegisterEnterprise)
+	r.HandleFunc("/read", api.ReadEnerprises)
 	return &server{
 		http: &http.Server{
 			Addr:        ":8080",
