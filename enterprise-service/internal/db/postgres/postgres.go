@@ -54,6 +54,10 @@ func (pg *pgconn) Read(e enterprise.Enterprise) (std.Linked[enterprise.Enterpris
 }
 
 func (pg *pgconn) Store(e enterprise.Enterprise) error {
+	_, err := pg.conn.Exec(context.Background(), QueryStoreEnterprise, e.Title)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
