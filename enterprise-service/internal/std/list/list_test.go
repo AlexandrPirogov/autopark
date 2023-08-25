@@ -33,13 +33,11 @@ func TestCreateList(t *testing.T) {
 
 func TestAddInEmptyList(t *testing.T) {
 	sut := New[Integer]()
-	insert := node[Integer]{nil, 10}
 
-	sut.Add(insert)
+	sut.Add(Integer(10))
 
 	assert.Equal(t, sut.Count(), 1)
 	assert.Equal(t, sut.head, sut.tail)
-	assert.Equal(t, sut.head, &insert)
 }
 
 // Adding many different notes
@@ -54,7 +52,7 @@ func TestAddManyList(t *testing.T) {
 
 	for _, edge := range tests {
 		t.Run(fmt.Sprintf("%d", edge.value), func(t *testing.T) {
-			sut.Add(edge)
+			sut.Add(Integer(edge.value))
 			assert.Equal(t, sut.tail, &edge)
 		})
 	}
@@ -66,7 +64,7 @@ func TestFindInSetList(t *testing.T) {
 	sut := New[Integer]()
 	var i Integer
 	for i = 0; i < 10; i++ {
-		sut.Add(node[Integer]{nil, i})
+		sut.Add(Integer(i))
 	}
 
 	for i = 0; i < 10; i++ {
@@ -91,7 +89,7 @@ func TestFindInList(t *testing.T) {
 	sut := New[Integer]()
 	var i Integer
 	for i = 0; i < 10; i++ {
-		sut.Add(node[Integer]{nil, duplicate})
+		sut.Add(Integer(duplicate))
 	}
 
 	for i = 0; i < 10; i++ {
@@ -107,4 +105,28 @@ func TestCountInEmptyList(t *testing.T) {
 	sut := New[Integer]()
 
 	assert.Equal(t, 0, sut.Count())
+}
+
+func TestPopFrontInEmpty(t *testing.T) {
+	sut := New[Integer]()
+
+	_, ok := sut.PopFront()
+	assert.False(t, ok)
+
+}
+
+func TestPopFrontInFilled(t *testing.T) {
+	sut := New[Integer]()
+	var i Integer
+	for i = 0; i < 10; i++ {
+		sut.Add(Integer(i))
+	}
+
+	for i = 0; i < 10; i++ {
+		t.Run("", func(t *testing.T) {
+			res, ok := sut.PopFront()
+			assert.True(t, ok)
+			assert.Equal(t, Integer(i), res)
+		})
+	}
 }
