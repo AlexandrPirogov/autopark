@@ -1,8 +1,10 @@
 package postgres
 
 import (
+	"context"
 	"enterprise-service/internal/enterprise"
 	"enterprise-service/internal/std"
+	"log"
 	"sync"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -24,7 +26,19 @@ type pgconn struct {
 }
 
 func new() *pgconn {
-	return &pgconn{}
+	return &pgconn{
+		conn: tryConnect(),
+	}
+}
+
+func tryConnect() *pgxpool.Pool {
+	URL := "postgresql://root:root@localhost:10000/postgres"
+	conn, err := pgxpool.New(context.Background(), URL)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return conn
 }
 
 func (pg *pgconn) Delete(e enterprise.Enterprise) error {
