@@ -20,7 +20,3 @@ func GetCurrentCredsStorerInstance() CredentionalsStorer {
 func GetCurrentJWTStorerInstance() JWTTokenStorer {
 	return redis.GetInstance()
 }
-
-func SetRefreshToken(val string) error {
-	return
-}
