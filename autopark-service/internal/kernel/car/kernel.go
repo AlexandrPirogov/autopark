@@ -10,7 +10,7 @@ import (
 //
 // Pre-cond: given car entity and entity implementing CarStorer interafce
 //
-// Post-cond: executes command to store given car in given CatStorer
+// Post-cond: executes command to store given car in given CarStorer
 // returns nil if command executed successfully otherwise error
 func CreateCar(c car.Car, s db.CarStorer) error {
 	return s.StoreCar(c)
@@ -20,7 +20,7 @@ func CreateCar(c car.Car, s db.CarStorer) error {
 //
 // Pre-cond: given car entity and entity implementing CarStorer interafce
 //
-// Post-cond: executes command to read cars by given car-pattern from given CatStorer
+// Post-cond: executes command to read cars by given car-pattern from given CarStorer
 // returns nil if command executed successfully otherwise error
 func ReadCars(pattern car.Car, s db.CarStorer) (std.Linked[car.Car], error) {
 	return s.ReadCars(pattern)
@@ -30,7 +30,7 @@ func ReadCars(pattern car.Car, s db.CarStorer) (std.Linked[car.Car], error) {
 //
 // Pre-cond: given car entity and entity implementing CarStorer interafce
 //
-// Post-cond: executes command to delete cars by given car-pattern from given CatStorer
+// Post-cond: executes command to delete cars by given car-pattern from given CarStorer
 // returns nil if command executed successfully otherwise error
 func DeleteCar(pattern car.Car, s db.CarStorer) error {
 	return s.DeleteCars(pattern)
