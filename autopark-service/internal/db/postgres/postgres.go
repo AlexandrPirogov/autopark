@@ -37,7 +37,7 @@ func new() *pgconn {
 // tryConnect trying to ping to verify that database is avaible
 // and given URL is correct
 func tryConnect() *pgxpool.Pool {
-	URL := "postgresql://postgres:postgres@localhost:10001/postgres"
+	URL := "postgresql://postgres:postgres@autoparkdb:5432/postgres"
 	conn, err := pgxpool.New(context.Background(), URL)
 	if err != nil {
 		log.Fatal(err)
