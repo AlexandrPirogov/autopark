@@ -1,9 +1,7 @@
 // package client holds interface and URLs to communicate with other services
 package client
 
-import (
-	"manager-service/internal/entity/autopark"
-)
+import "manager-service/internal/entity/autopark"
 
 // ApiGateway URL
 const ApiGatewayHost = "http://api-gateway-nginx"
