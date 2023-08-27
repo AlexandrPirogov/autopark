@@ -12,21 +12,6 @@ import (
 	"net/http"
 )
 
-// Lists brandss
-const BrandListrURL = "/autopark/brand/list"
-
-// Register new brand
-const BrandRegisterURL = "/autopark/brand/register"
-
-// List cars
-const CarListURL = "/autopark/car/list"
-
-// Register new acrs
-const CarRegisterURL = "/autopark/car/register"
-
-// Delete car
-const CarDeleteURL = "/autopark/car/remove"
-
 // New returns pointer to new instance of Rest
 //
 // Post-cond: returned new pointer to instance of Rest
@@ -53,7 +38,7 @@ func (r *Rest) StoreBrand(b autopark.Brand) error {
 		return err
 	}
 
-	response, errResp := r.executeRequest(http.MethodPost, client.ApiGatewayHost+BrandRegisterURL, payload)
+	response, errResp := r.executeRequest(http.MethodPost, client.ApiGatewayHost+client.BrandRegisterURL, payload)
 	if errResp != nil {
 		log.Println(errResp)
 		return errResp
@@ -80,7 +65,7 @@ func (r *Rest) ReadBrands(pattern autopark.Brand) ([]autopark.Brand, error) {
 		return nil, err
 	}
 
-	response, errResp := r.executeRequest(http.MethodPost, client.ApiGatewayHost+BrandListrURL, payload)
+	response, errResp := r.executeRequest(http.MethodPost, client.ApiGatewayHost+client.BrandListrURL, payload)
 	if errResp != nil {
 		log.Println(errResp)
 		return nil, errResp
@@ -113,7 +98,7 @@ func (r *Rest) StoreCar(c autopark.Car) error {
 		return err
 	}
 
-	response, errResp := r.executeRequest(http.MethodPost, client.ApiGatewayHost+CarRegisterURL, payload)
+	response, errResp := r.executeRequest(http.MethodPost, client.ApiGatewayHost+client.CarRegisterURL, payload)
 	if errResp != nil {
 		log.Println(errResp)
 		return errResp
@@ -139,7 +124,7 @@ func (r *Rest) DeleteCars(pattern autopark.Car) error {
 		return err
 	}
 
-	response, errResp := r.executeRequest(http.MethodPost, client.ApiGatewayHost+CarDeleteURL, payload)
+	response, errResp := r.executeRequest(http.MethodPost, client.ApiGatewayHost+client.CarDeleteURL, payload)
 	if errResp != nil {
 		log.Println(errResp)
 		return errResp
@@ -166,7 +151,7 @@ func (r *Rest) ReadCars(pattern autopark.Car) ([]autopark.Car, error) {
 		return nil, err
 	}
 
-	response, errResp := r.executeRequest(http.MethodPost, client.ApiGatewayHost+CarListURL, payload)
+	response, errResp := r.executeRequest(http.MethodPost, client.ApiGatewayHost+client.CarListURL, payload)
 	if errResp != nil {
 		log.Println(errResp)
 		return nil, errResp
@@ -194,7 +179,7 @@ func (r *Rest) ReadCars(pattern autopark.Car) ([]autopark.Car, error) {
 // Otherwise returnes nil, error
 func (r *Rest) executeRequest(method string, url string, body []byte) (*http.Response, error) {
 	reader := bytes.NewReader(body)
-	request, errReq := http.NewRequest(http.MethodPost, client.ApiGatewayHost+CarListURL, reader)
+	request, errReq := http.NewRequest(http.MethodPost, client.ApiGatewayHost+client.CarListURL, reader)
 	if errReq != nil {
 		log.Println(errReq)
 		return nil, errReq
