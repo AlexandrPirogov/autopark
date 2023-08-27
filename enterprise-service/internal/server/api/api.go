@@ -185,16 +185,6 @@ func RegisterManager(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseBody)
 }
 
-// Update updates existing enterprise entity in system
-//
-// Pre-cond: given enterprise pattern to update and new params for them
-//
-// Post-cond: all enterprises that matches the given pattern was update
-// with given new params
-func UpdateEnterprises(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-}
-
 func retrieveRefreshToken(r *http.Request) (string, error) {
 	var cookie *http.Cookie
 	cookie, err := r.Cookie("refresh-token")
