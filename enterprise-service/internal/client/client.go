@@ -18,5 +18,12 @@ type Manager struct {
 }
 
 type ManagerHandler interface {
+	// RegisterManager making request to register manager in auth-service
+	//
+	// Pre-cond: given client.Manager instance to register
+	//
+	// Post-cond: request was executed and result returned.
+	// If request executes successfully returns Manager that was registeres and nil error
+	// Otherwise returnes nil and error
 	RegisterManager(m Manager) (Manager, error)
 }
