@@ -20,12 +20,12 @@ func VerifyAdminCredentionals(login, pwd string, s db.CredentionalsStorer) (stri
 	return refresh, nil
 }
 
-func RegisterManager(login, pwd string, s db.CredentionalsStorer) error {
+func RegisterManager(login, pwd string, s db.CredentionalsStorer) (int, error) {
 	return s.RegisterManager(login, pwd)
 }
 
 func VerifyManagerCredentionals(login, pwd string, s db.CredentionalsStorer) (string, error) {
-	err := s.LookForManager(login, pwd)
+	_, err := s.LookForManager(login, pwd)
 	if err != nil {
 		return "", fmt.Errorf("not found")
 	}
