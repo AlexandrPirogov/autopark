@@ -2,7 +2,7 @@ package kernel
 
 import (
 	"enterprise-service/internal/enterprise"
-	"enterprise-service/internal/std"
+	"enterprise-service/std"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -16,6 +16,11 @@ func (db *dbstub) Delete(e enterprise.Enterprise) error {
 
 func (db *dbstub) Read(e enterprise.Enterprise) (std.Linked[enterprise.Enterprise], error) {
 	return nil, nil
+}
+
+func (db *dbstub) ReadByID(id int) (enterprise.Enterprise, error) {
+	var e enterprise.Enterprise
+	return e, nil
 }
 
 func (db *dbstub) Store(e enterprise.Enterprise) error {
