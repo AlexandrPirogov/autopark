@@ -27,7 +27,7 @@ func LoginAdmin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	RT, err := auth.VerifyCredentionals(c.Login, c.Pwd, db.GetCurrentCredsStorerInstance())
+	RT, err := auth.VerifyAdminCredentionals(c.Login, c.Pwd, db.GetCurrentCredsStorerInstance())
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -44,12 +44,12 @@ func LoginAdmin(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func VerifyJWT(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-}
-
 func LogoutAdmin(w http.ResponseWriter, r *http.Request) {
 	cookie := unsetRefreshCookieToken()
 	http.SetCookie(w, cookie)
+	w.WriteHeader(http.StatusOK)
+}
+
+func VerifyJWT(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
