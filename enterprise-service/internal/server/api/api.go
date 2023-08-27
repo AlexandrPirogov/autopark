@@ -7,6 +7,7 @@ import (
 	"enterprise-service/internal/db"
 	"enterprise-service/internal/enterprise"
 	"enterprise-service/internal/kernel"
+	"enterprise-service/internal/std"
 	"fmt"
 	"io"
 	"log"
@@ -82,20 +83,9 @@ func ReadEnerprises(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseBody := []byte{}
-	for {
-		item, ok := list.PopFront()
-		if !ok {
-			break
-		}
+	toMarshal := std.AsSlice(list.Iterator())
 
-		marshaled, err := json.Marshal(item)
-		if err != nil {
-			continue
-		}
-
-		responseBody = append(responseBody, marshaled...)
-	}
+	responseBody, _ := json.Marshal(toMarshal)
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(responseBody)
@@ -187,7 +177,7 @@ func RegisterManager(w http.ResponseWriter, r *http.Request) {
 
 func retrieveRefreshToken(r *http.Request) (string, error) {
 	var cookie *http.Cookie
-	cookie, err := r.Cookie("refresh-token")
+	cookie, err := r.Cookie(client.RerfeshTokenCookieField)
 
 	if cookie == nil || err != nil {
 		log.Println(r.Header[client.RerfeshTokenCookieField])

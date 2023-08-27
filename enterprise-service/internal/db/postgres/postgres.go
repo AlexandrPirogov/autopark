@@ -33,6 +33,20 @@ type pgconn struct {
 	conn *pgxpool.Pool
 }
 
+// AssignManager assignes given manager to enterprise
+//
+// Pre-cond: given Manager to assign with set ID and E_ID
+//
+// Post-cond: EnterpriseStorer assign given manager to enterprise.
+// If successfull, returns nil otherwise returns error
+func (pg *pgconn) AssignManager(m client.Manager) error {
+	_, err := pg.conn.Exec(context.Background(), QueryAssignManager, m.EnterpriseID, m.Id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // Delete removes all enterprise entities which mathces given pattern
 //
 // Pre-cond: given pattern
@@ -88,20 +102,6 @@ func (pg *pgconn) ReadByID(id int) (enterprise.Enterprise, error) {
 // Post-cond: given enterprise entity was written
 func (pg *pgconn) StoreEnterprise(e enterprise.Enterprise) error {
 	_, err := pg.conn.Exec(context.Background(), QueryStoreEnterprise, e.Title)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// AssignManager assignes given manager to enterprise
-//
-// Pre-cond: given Manager to assign with set ID and E_ID
-//
-// Post-cond: EnterpriseStorer assign given manager to enterprise.
-// If successfull, returns nil otherwise returns error
-func (pg *pgconn) AssignManager(m client.Manager) error {
-	_, err := pg.conn.Exec(context.Background(), QueryAssignManager, m.EnterpriseID, m.Id)
 	if err != nil {
 		return err
 	}
