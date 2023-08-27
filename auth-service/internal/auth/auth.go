@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"auth-service/internal/auth/refresh"
+	"auth-service/internal/auth/jwt"
 	"auth-service/internal/storage/db"
 	"fmt"
 )
@@ -12,7 +12,7 @@ func VerifyCredentionals(login, pwd string, s db.CredentionalsStorer) (string, e
 		return "", fmt.Errorf("not found")
 	}
 
-	refresh, err := refresh.GenerateRefreshToken()
+	refresh, err := jwt.GenerateRefreshToken()
 	if err != nil {
 		return "", err
 	}
