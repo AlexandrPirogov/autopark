@@ -33,7 +33,7 @@ func new() *pgconn {
 }
 
 func tryConnect() *pgxpool.Pool {
-	URL := "postgresql://postgres:postgres@localhost:10000/postgres"
+	URL := "postgresql://postgres:postgres@enterprise-db:5432/postgres"
 	conn, err := pgxpool.New(context.Background(), URL)
 	if err != nil {
 		log.Fatal(err)
