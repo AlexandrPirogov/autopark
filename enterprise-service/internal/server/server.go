@@ -31,7 +31,9 @@ func New(ctx context.Context) *server {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Post("/register", api.RegisterEnterprise)
-	r.Post("/read", api.ReadEnerprises)
+	r.Get("/{id}/list", api.ReadEnerprise)
+	r.Post("/register/manager", api.RegisterManager)
+	r.Post("/list", api.ReadEnerprises)
 	return &server{
 		http: &http.Server{
 			Addr:        ":8080",
