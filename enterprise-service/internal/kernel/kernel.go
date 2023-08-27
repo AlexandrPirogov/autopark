@@ -8,10 +8,22 @@ import (
 	"enterprise-service/internal/std"
 )
 
+// RegisterManager sends request by ManagerHandler to register new manager in system
+//
+// Pre-cond: given Manage instance with login and pwd and ManagerHandler to send request
+//
+// Post-cond: request was executed. If manager was registered successfully,
+// returns manager with set ID and nil. Otherwise return error
 func RegisterManager(m client.Manager, c client.ManagerHandler) (client.Manager, error) {
 	return c.RegisterManager(m)
 }
 
+// AssignManager assignes registered manager to enterprise in enterprise-system
+//
+// Pre-cond: given Manager to assign with set ID and E_ID and EnterpriseStorer to store in
+//
+// Post-cond: EnterpriseStorer assign given manager to enterprise. If successfull, returns nil
+// otherwise returns error
 func AssignManager(m client.Manager, s db.EntepriseStorer) error {
 	return s.AssignManager(m)
 }
