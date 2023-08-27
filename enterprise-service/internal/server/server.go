@@ -32,7 +32,7 @@ func New(ctx context.Context) *server {
 	r.Use(middleware.Logger)
 	r.Post("/register", api.RegisterEnterprise)
 	r.Get("/{id}/list", api.ReadEnerprise)
-	r.Post("/register/manager", api.RegisterManager)
+	r.Post("/{id}/register/manager", api.RegisterManager)
 	r.Post("/list", api.ReadEnerprises)
 	return &server{
 		http: &http.Server{

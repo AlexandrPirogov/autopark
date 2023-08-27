@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"enterprise-service/internal/client"
 	"enterprise-service/internal/enterprise"
 	"enterprise-service/internal/std"
 	"enterprise-service/internal/std/list"
@@ -77,7 +78,7 @@ func (pg *pgconn) ReadByID(id int) (enterprise.Enterprise, error) {
 	return e, err
 }
 
-func (pg *pgconn) Store(e enterprise.Enterprise) error {
+func (pg *pgconn) StoreEnterprise(e enterprise.Enterprise) error {
 	_, err := pg.conn.Exec(context.Background(), QueryStoreEnterprise, e.Title)
 	if err != nil {
 		return err
@@ -87,4 +88,12 @@ func (pg *pgconn) Store(e enterprise.Enterprise) error {
 
 func (pg *pgconn) Update(s enterprise.Enterprise) (std.Linked[enterprise.Enterprise], error) {
 	return nil, nil
+}
+
+func (pg *pgconn) AssignManager(m client.Manager) error {
+	_, err := pg.conn.Exec(context.Background(), QueryAssignManager, m.EnterpriseID, m.Id)
+	if err != nil {
+		return err
+	}
+	return nil
 }

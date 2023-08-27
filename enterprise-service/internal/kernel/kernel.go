@@ -12,6 +12,10 @@ func RegisterManager(m client.Manager, c client.ManagerHandler) (client.Manager,
 	return c.RegisterManager(m)
 }
 
+func AssignManager(m client.Manager, s db.EntepriseStorer) error {
+	return s.AssignManager(m)
+}
+
 // Delete removes all enterprise entities from given EnterpriseStore which mathces given pattern
 //
 // Pre-cond: given pattern and Storer to remove enterprise entityies from
@@ -45,7 +49,7 @@ func ReadByID(id int, s db.EntepriseStorer) (enterprise.Enterprise, error) {
 //
 // Post-cond: given enterprise entity was written to EnterpriseStore
 func Store(e enterprise.Enterprise, s db.EntepriseStorer) error {
-	return s.Store(e)
+	return s.StoreEnterprise(e)
 }
 
 // Update updates all enterprise entities from given EnterpriseStore which mathces given pattern

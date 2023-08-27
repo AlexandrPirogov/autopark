@@ -134,6 +134,14 @@ func ReadEnerprise(w http.ResponseWriter, r *http.Request) {
 }
 
 func RegisterManager(w http.ResponseWriter, r *http.Request) {
+	idstr := chi.URLParam(r, "id")
+	id, convErr := strconv.Atoi(idstr)
+	if convErr != nil {
+		log.Println(convErr)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	var m client.Manager
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -156,6 +164,15 @@ func RegisterManager(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	res.EnterpriseID = id
+	assignErr := kernel.AssignManager(res, db.GetConnInstance())
+	if assignErr != nil {
+		log.Println(assignErr)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	log.Printf("register response %v", res)
 	responseBody, marshalErr := json.Marshal(res)
 	if marshalErr != nil {
