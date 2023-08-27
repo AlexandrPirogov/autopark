@@ -1,5 +1,4 @@
 // std hold interfaces for all data structures that used in this project
-
 package std
 
 // Iterator incapsulate movement inside data structure elements in one way

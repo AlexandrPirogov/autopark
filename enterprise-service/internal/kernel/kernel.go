@@ -5,7 +5,7 @@ import (
 	"enterprise-service/internal/client"
 	"enterprise-service/internal/db"
 	"enterprise-service/internal/enterprise"
-	"enterprise-service/std"
+	"enterprise-service/internal/std"
 )
 
 func RegisterManager(m client.Manager, c client.ManagerHandler) (client.Manager, error) {

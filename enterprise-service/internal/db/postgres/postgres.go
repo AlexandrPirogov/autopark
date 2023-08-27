@@ -3,8 +3,8 @@ package postgres
 import (
 	"context"
 	"enterprise-service/internal/enterprise"
-	"enterprise-service/std"
-	"enterprise-service/std/list"
+	"enterprise-service/internal/std"
+	"enterprise-service/internal/std/list"
 	"log"
 	"sync"
 

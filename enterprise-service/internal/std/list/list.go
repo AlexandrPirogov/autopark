@@ -1,6 +1,6 @@
 package list
 
-import "enterprise-service/std"
+import "enterprise-service/internal/std"
 
 // listIterator type for linked list iterator
 // that moves from head to tail

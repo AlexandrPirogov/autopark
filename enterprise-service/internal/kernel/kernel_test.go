@@ -2,7 +2,7 @@ package kernel
 
 import (
 	"enterprise-service/internal/enterprise"
-	"enterprise-service/std"
+	"enterprise-service/internal/std"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

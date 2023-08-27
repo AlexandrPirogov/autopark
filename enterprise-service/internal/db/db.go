@@ -3,7 +3,7 @@ package db
 import (
 	"enterprise-service/internal/db/postgres"
 	"enterprise-service/internal/enterprise"
-	"enterprise-service/std"
+	"enterprise-service/internal/std"
 )
 
 // EnterpriseStorer stands for working with storer to save enterprise entyties
