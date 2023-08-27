@@ -1,9 +1,9 @@
 package main
 
 import (
-	"autopark-service/internal/server"
 	"context"
 	"log"
+	"manager-service/internal/server"
 	"os"
 	"os/signal"
 	"syscall"
@@ -39,5 +39,4 @@ func main() {
 	cancel()
 	defer os.Exit(0)
 	close(cancelChan)
-
 }

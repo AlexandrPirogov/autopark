@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 type EnterpriseServer interface {
@@ -28,7 +29,7 @@ func (s *server) Shutdown(ctx context.Context) error {
 
 func New(ctx context.Context) *server {
 	r := chi.NewRouter()
-
+	r.Use(middleware.Logger)
 	r.HandleFunc("/brand/register", api.RegisterBrand)
 	r.HandleFunc("/brand/list", api.ReadBrands)
 

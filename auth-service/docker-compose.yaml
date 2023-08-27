@@ -2,19 +2,24 @@ services:
    auth-postgres:
     image: postgres:alpine
     container_name: auth-postgres
+    networks:
+      - autopark-backend
     restart: always
     environment:      
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     ports:
-      - 10002:5432
+      - 10003:5432
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+   #redis
    auth-redis:
     image: redis:alpine
     restart: always
     container_name: auth-redis
+    networks:
+      - autopark-backend
     command:
       - /bin/sh
       - -c
@@ -23,3 +28,24 @@ services:
       - "6379:6379"
     env_file:
       - .env
+
+   #auth service
+   auth-service:
+    image: golang:1.21
+    container_name: auth-service
+    depends_on:
+      - auth-postgres
+      - auth-redis
+    networks:
+      - autopark-backend
+    ports:
+      - 15050:8080
+    volumes:
+      - ./:/auth-service
+    working_dir: /auth-service
+    command: "go run cmd/server/main.go"
+
+networks:
+  autopark-backend:
+    driver: bridge
+    name: autopark-backend

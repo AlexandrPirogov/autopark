@@ -37,11 +37,12 @@ func New(ctx context.Context) *server {
 
 	r.Group(func(r chi.Router) {
 		r.Use(amiddle.AuthJWT)
+		r.Get("/verify", api.VerifyJWT)
 		r.Get("/logout/admin", api.LogoutAdmin)
 	})
 	return &server{
 		http: &http.Server{
-			Addr:        ":8085",
+			Addr:        ":8080",
 			Handler:     r,
 			BaseContext: func(l net.Listener) context.Context { return ctx },
 		},

@@ -44,6 +44,10 @@ func LoginAdmin(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func VerifyJWT(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+}
+
 func LogoutAdmin(w http.ResponseWriter, r *http.Request) {
 	cookie := unsetRefreshCookieToken()
 	http.SetCookie(w, cookie)
