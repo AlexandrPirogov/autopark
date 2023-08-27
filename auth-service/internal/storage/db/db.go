@@ -7,8 +7,8 @@ import (
 
 type CredentionalsStorer interface {
 	LookForAdmin(login, pwd string) error
-	LookForManager(login, pwd string) error
-	RegisterManager(login, pwd string) error
+	LookForManager(login, pwd string) (int, error)
+	RegisterManager(login, pwd string) (int, error)
 }
 
 type JWTTokenStorer interface {

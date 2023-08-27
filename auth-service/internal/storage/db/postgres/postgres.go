@@ -50,15 +50,16 @@ func (pg *pgconn) LookForAdmin(login, pwd string) error {
 	return err
 }
 
-func (pg *pgconn) RegisterManager(login, pwd string) error {
+// 2 distinct pg queries...
+func (pg *pgconn) RegisterManager(login, pwd string) (int, error) {
 	_, err := pg.conn.Exec(context.Background(), QueryInsertNewManager, login, pwd)
 	log.Println(err)
-	return err
+	return pg.LookForManager(login, pwd)
 }
 
-func (pg *pgconn) LookForManager(login, pwd string) error {
+func (pg *pgconn) LookForManager(login, pwd string) (int, error) {
 	var id int
 	err := pg.conn.QueryRow(context.Background(), QueryLookForManager, login, pwd).Scan(&id)
 	log.Println(err)
-	return err
+	return id, err
 }
