@@ -6,9 +6,27 @@ import (
 	"fmt"
 )
 
-func VerifyCredentionals(login, pwd string, s db.CredentionalsStorer) (string, error) {
-	res := s.LookForAdmin(login, pwd)
-	if !res {
+func VerifyAdminCredentionals(login, pwd string, s db.CredentionalsStorer) (string, error) {
+	err := s.LookForAdmin(login, pwd)
+	if err != nil {
+		return "", fmt.Errorf("not found")
+	}
+
+	refresh, err := jwt.GenerateRefreshToken()
+	if err != nil {
+		return "", err
+	}
+
+	return refresh, nil
+}
+
+func RegisterManager(login, pwd string, s db.CredentionalsStorer) error {
+	return s.RegisterManager(login, pwd)
+}
+
+func VerifyManagerCredentionals(login, pwd string, s db.CredentionalsStorer) (string, error) {
+	err := s.LookForManager(login, pwd)
+	if err != nil {
 		return "", fmt.Errorf("not found")
 	}
 
