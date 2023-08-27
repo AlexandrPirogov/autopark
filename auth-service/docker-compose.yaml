@@ -1,0 +1,25 @@
+services:
+   auth-postgres:
+    image: postgres:alpine
+    container_name: auth-postgres
+    restart: always
+    environment:      
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - 10002:5432
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+   auth-redis:
+    image: redis:alpine
+    restart: always
+    container_name: auth-redis
+    command:
+      - /bin/sh
+      - -c
+      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+    ports:
+      - "6379:6379"
+    env_file:
+      - .env
