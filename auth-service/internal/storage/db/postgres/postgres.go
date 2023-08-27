@@ -43,9 +43,22 @@ func tryConnect() *pgxpool.Pool {
 	return conn
 }
 
-func (pg *pgconn) LookForAdmin(login, pwd string) bool {
-	var uid []byte
-	err := pg.conn.QueryRow(context.Background(), QueryLookForAdmin, login, pwd).Scan(&uid)
+func (pg *pgconn) LookForAdmin(login, pwd string) error {
+	var id int
+	err := pg.conn.QueryRow(context.Background(), QueryLookForAdmin, login, pwd).Scan(&id)
 	log.Println(err)
-	return err == nil
+	return err
+}
+
+func (pg *pgconn) RegisterManager(login, pwd string) error {
+	_, err := pg.conn.Exec(context.Background(), QueryInsertNewManager, login, pwd)
+	log.Println(err)
+	return err
+}
+
+func (pg *pgconn) LookForManager(login, pwd string) error {
+	var id int
+	err := pg.conn.QueryRow(context.Background(), QueryLookForManager, login, pwd).Scan(&id)
+	log.Println(err)
+	return err
 }
