@@ -63,12 +63,3 @@ func ReadByID(id int, s db.EntepriseStorer) (enterprise.Enterprise, error) {
 func Store(e enterprise.Enterprise, s db.EntepriseStorer) error {
 	return s.StoreEnterprise(e)
 }
-
-// Update updates all enterprise entities from given EnterpriseStore which mathces given pattern
-//
-// Pre-cond: given pattern and EntepriseStorer to update enterprise entities
-//
-// Post-cond: all enterprises which matches given pattern was updated within given EntepriseStorer
-func Update(pattern enterprise.Enterprise, s db.EntepriseStorer) (std.Linked[enterprise.Enterprise], error) {
-	return s.Update(pattern)
-}
