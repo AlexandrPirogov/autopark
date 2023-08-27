@@ -3,8 +3,8 @@ package postgres
 import (
 	"context"
 	"enterprise-service/internal/enterprise"
-	"enterprise-service/internal/std"
-	"enterprise-service/internal/std/list"
+	"enterprise-service/std"
+	"enterprise-service/std/list"
 	"log"
 	"sync"
 
@@ -65,10 +65,16 @@ func (pg *pgconn) Read(e enterprise.Enterprise) (std.Linked[enterprise.Enterpris
 			log.Println(err)
 			continue
 		}
-		res.Add(e)
+		res.PushBack(e)
 	}
 
 	return res, nil
+}
+
+func (pg *pgconn) ReadByID(id int) (enterprise.Enterprise, error) {
+	var e enterprise.Enterprise
+	err := pg.conn.QueryRow(context.Background(), QueryReadByIDEnterprises, id).Scan(&e.Title)
+	return e, err
 }
 
 func (pg *pgconn) Store(e enterprise.Enterprise) error {
