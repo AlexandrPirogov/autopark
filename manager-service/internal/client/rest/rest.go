@@ -179,7 +179,7 @@ func (r *Rest) ReadCars(pattern autopark.Car) ([]autopark.Car, error) {
 // Otherwise returnes nil, error
 func (r *Rest) executeRequest(method string, url string, body []byte) (*http.Response, error) {
 	reader := bytes.NewReader(body)
-	request, errReq := http.NewRequest(http.MethodPost, client.ApiGatewayHost+client.CarListURL, reader)
+	request, errReq := http.NewRequest(http.MethodPost, url, reader)
 	if errReq != nil {
 		log.Println(errReq)
 		return nil, errReq
