@@ -16,6 +16,6 @@ CREATE TABLE CLIENTS(
     PWD VARCHAR(255) NOT NULL
 );
 
-INSERT INTO ADMINS VALUES(default, 'uid', 'admin', 'admin');
-INSERT INTO ADMINS VALUES(default, 'uid1', 'admin1', 'admin1');
-INSERT INTO ADMINS VALUES(default, 'uid2', 'admin2', 'admin2');
+INSERT INTO ADMINS VALUES(default, 'admin', 'admin');
+INSERT INTO ADMINS VALUES(default, 'admin1', 'admin1');
+INSERT INTO ADMINS VALUES(default, 'admin2', 'admin2');
