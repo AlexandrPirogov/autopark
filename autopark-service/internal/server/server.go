@@ -33,9 +33,13 @@ func New(ctx context.Context) *server {
 	r.HandleFunc("/brand/register", api.RegisterBrand)
 	r.HandleFunc("/brand/list", api.ReadBrands)
 
-	r.HandleFunc("/car/register", api.CreateCar)
-	r.HandleFunc("/car/list", api.ReadCars)
-	r.HandleFunc("/car/remove", api.DeleteCar)
+	r.Post("/car/register", api.CreateCar)
+	r.Post("/car/list", api.ReadCars)
+	r.Post("/car/remove", api.DeleteCar)
+	//r.Get("/car/set/list", api.ReadSetCars)
+
+	r.Put("/car/{uid}/set", api.SetCar)
+	r.Put("/car/{uid}/unset", api.UnsetCar)
 
 	return &server{
 		http: &http.Server{

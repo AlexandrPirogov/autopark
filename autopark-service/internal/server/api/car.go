@@ -10,6 +10,8 @@ import (
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
 )
 
 // CreateCar receives json body, unmarshal it and trying to store in Storage
@@ -84,4 +86,28 @@ func DeleteCar(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+func SetCar(w http.ResponseWriter, r *http.Request) {
+	uid := chi.URLParam(r, "uid")
+	c := car.Car{UID: uid}
+	err := kernel.SetCar(c, db.GetConnInstance())
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
+func UnsetCar(w http.ResponseWriter, r *http.Request) {
+	uid := chi.URLParam(r, "uid")
+	c := car.Car{UID: uid}
+	err := kernel.UnsetCar(c, db.GetConnInstance())
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }
