@@ -123,6 +123,7 @@ func ReadEnerprise(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseBody)
 }
 
+// RegisterManagers regsiter new manager in auth-service
 func RegisterManager(w http.ResponseWriter, r *http.Request) {
 	idstr := chi.URLParam(r, "id")
 	id, convErr := strconv.Atoi(idstr)

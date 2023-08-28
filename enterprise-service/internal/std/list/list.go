@@ -1,3 +1,4 @@
+// list represents linked list data structre
 package list
 
 import "enterprise-service/internal/std"
