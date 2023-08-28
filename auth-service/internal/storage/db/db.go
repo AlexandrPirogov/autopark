@@ -1,3 +1,5 @@
+// package db collectects interfaces for working with
+// users' authentication
 package db
 
 import (
@@ -5,9 +7,30 @@ import (
 	"auth-service/internal/storage/db/redis"
 )
 
+// CredentionalsStorer is interface for working with db and users of system
 type CredentionalsStorer interface {
+	// LookForAdmin searchs admin by given login and pwd.
+	//
+	// Pre-cond: given login and password
+	//
+	// Post-cond: executes query tos elect admin with given login and pwd.
+	// If admin was found, returns min otherwise returnes error
 	LookForAdmin(login, pwd string) error
+
+	// LookForManager looking for manager with given login and pwd
+	//
+	// Pre-cond: given login and pwd
+	//
+	// Post-cond: query was executed. If success, returns id of registere manager and nil.
+	// Otherwise returns error
 	LookForManager(login, pwd string) (int, error)
+
+	// RegisterManager register new manager with given login and pwd
+	//
+	// Pre-cond: given login and pwd to register new manager. Login must be unique
+	//
+	// Post-cond: query was executed. If success, returns id of registere manager and nil.
+	// Otherwise returns error
 	RegisterManager(login, pwd string) (int, error)
 }
 
