@@ -5,6 +5,7 @@ import (
 	"auth-service/internal/storage/db"
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -51,5 +52,6 @@ func LogoutAdmin(w http.ResponseWriter, r *http.Request) {
 }
 
 func VerifyJWT(w http.ResponseWriter, r *http.Request) {
+	log.Println(r.Cookies())
 	w.WriteHeader(http.StatusOK)
 }
