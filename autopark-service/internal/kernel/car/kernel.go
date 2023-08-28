@@ -35,3 +35,11 @@ func ReadCars(pattern car.Car, s db.CarStorer) (std.Linked[car.Car], error) {
 func DeleteCar(pattern car.Car, s db.CarStorer) error {
 	return s.DeleteCars(pattern)
 }
+
+func SetCar(c car.Car, s db.CarStorer) error {
+	return s.SetCar(c)
+}
+
+func UnsetCar(c car.Car, s db.CarStorer) error {
+	return s.UnsetCar(c)
+}
