@@ -13,7 +13,7 @@ const BrandListrURL = "/autopark/brand/list"
 const BrandRegisterURL = "/autopark/brand/register"
 
 // List cars
-const CarListURL = "/autopark/car/list"
+const CarListURL = "/autopark/car/set/list"
 
 // Register new acrs
 const CarRegisterURL = "/autopark/car/register"
