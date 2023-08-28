@@ -23,12 +23,23 @@ insert into cars values(
 	$2, 
 	$3)`
 
+const QueryStoreCarForBookings = `
+insert into cars_for_booking values(
+	default,
+	(select id from cars where uid = $1),
+	'set', 
+	0)`
+
 // Delete cars entities from db
 // that match given pattern
 const QueryDeleteCar = `
 delete from cars where brand_id =
 (select id from brands where brand = $1)
 and uid = $2 and type = $3`
+
+const QuerySetCar = `update cars_for_booking set status = 'set' where id = (select id from cars where uid = $1)`
+
+const QueryUnsetCar = `update cars_for_booking set status = 'unset' where id = (select id from cars where uid = $1)`
 
 // DeleteCars executing QueryDeleteCar query
 //
@@ -82,6 +93,27 @@ func (pg *pgconn) ReadCars(c car.Car) (std.Linked[car.Car], error) {
 // Otherwise returns error
 func (pg *pgconn) StoreCar(c car.Car) error {
 	_, err := pg.conn.Exec(context.Background(), QueryStoreCar, c.Brand, c.UID, c.Type)
+	if err != nil {
+		return err
+	}
+
+	_, err = pg.conn.Exec(context.Background(), QueryStoreCarForBookings, c.UID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (pg *pgconn) SetCar(c car.Car) error {
+	_, err := pg.conn.Exec(context.Background(), QuerySetCar, c.UID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (pg *pgconn) UnsetCar(c car.Car) error {
+	_, err := pg.conn.Exec(context.Background(), QueryUnsetCar, c.UID)
 	if err != nil {
 		return err
 	}
