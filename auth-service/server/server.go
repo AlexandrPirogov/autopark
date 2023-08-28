@@ -35,6 +35,9 @@ func New(ctx context.Context) *server {
 
 	r.Post("/login/admin", api.LoginAdmin)
 	r.Post("/login/manager", api.LoginManager)
+	r.Post("/login/client", api.LoginClient)
+
+	r.Post("/register/client", api.RegisterClient)
 
 	r.Group(func(r chi.Router) {
 		r.Use(m.AuthJWT)
