@@ -10,6 +10,8 @@ import (
 	"net/http"
 )
 
+// LoginManager authenticate manager. If creds are correct then generate
+// new Refresh Token and put it in the request header
 func LoginManager(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -41,6 +43,7 @@ func LoginManager(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+// Register manager registers new manager with given creds
 func RegisterManager(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {

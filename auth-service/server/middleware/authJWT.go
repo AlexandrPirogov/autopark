@@ -11,9 +11,10 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+// AuthJWT verify that request contains in cookie "refresh-token" refresh token
 func AuthJWT(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if err := VerifyRefreshToken(r); err != nil {
+		if err := verifyRefreshToken(r); err != nil {
 			log.Println("verify err ", err)
 			w.WriteHeader(http.StatusUnauthorized)
 			return
@@ -22,7 +23,7 @@ func AuthJWT(next http.Handler) http.Handler {
 	})
 }
 
-func VerifyRefreshToken(r *http.Request) error {
+func verifyRefreshToken(r *http.Request) error {
 	var cookie *http.Cookie
 	cookie, err := r.Cookie(auth.RerfeshTokenCookieField)
 	if cookie == nil || err != nil {
@@ -43,7 +44,7 @@ func VerifyRefreshToken(r *http.Request) error {
 		log.Println(err)
 		return err
 	}
-	log.Println("token valid ", token.Valid)
+
 	if token.Valid {
 		return nil
 	}
