@@ -12,9 +12,11 @@ type BrandStorer interface {
 }
 
 type CarStorer interface {
-	StoreCar(c car.Car) error
 	DeleteCars(pattern car.Car) error
 	ReadCars(pattern car.Car) (std.Linked[car.Car], error)
+	SetCar(c car.Car) error
+	StoreCar(c car.Car) error
+	UnsetCar(c car.Car) error
 }
 
 type Storer interface {
