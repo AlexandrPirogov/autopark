@@ -21,7 +21,7 @@ func main() {
 
 	cancelChan := make(chan os.Signal, 1)
 	signal.Notify(cancelChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGHUP, syscall.SIGQUIT)
-	log.Println("Running enterprise-service")
+	log.Println("Running auth-service")
 	sig := <-cancelChan
 	log.Printf("Got signal %v\n", sig)
 
