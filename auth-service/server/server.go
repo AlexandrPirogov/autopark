@@ -24,7 +24,7 @@ func (s *server) ListenAndServe() error {
 	return s.http.ListenAndServe()
 }
 
-func (s *server) ShutDown(ctx context.Context) error {
+func (s *server) Shutdown(ctx context.Context) error {
 	return s.http.Shutdown(ctx)
 }
 
