@@ -1,0 +1,17 @@
+services:
+   client-service:
+    image: golang:1.21
+    container_name: client-service
+    networks:
+      - autopark-backend
+    ports:
+      - 15080:8080
+    volumes:
+      - ./:/client-service
+    working_dir: /client-service
+    command: "go run cmd/server/main.go"
+
+networks:
+  autopark-backend:
+    driver: bridge
+    name: autopark-backend
