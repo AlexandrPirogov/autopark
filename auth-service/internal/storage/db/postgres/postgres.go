@@ -62,6 +62,31 @@ func (pg *pgconn) LookForManager(login, pwd string) (int, error) {
 	return id, err
 }
 
+// RegisterClient register new Client with given login and pwd
+//
+// Pre-cond: given login and pwd to register new Client. Login must be unique
+//
+// Post-cond: query was executed. If success, returns id of registere Client and nil.
+// Otherwise returns error
+func (pg *pgconn) RegisterClient(login, pwd string) (int, error) {
+	_, err := pg.conn.Exec(context.Background(), QueryInsertNewClient, login, pwd)
+	log.Println(err)
+	return pg.LookForClient(login, pwd)
+}
+
+// LookForClient looking for Client with given login and pwd
+//
+// Pre-cond: given login and pwd
+//
+// Post-cond: query was executed. If success, returns id of registere Client and nil.
+// Otherwise returns error
+func (pg *pgconn) LookForClient(login, pwd string) (int, error) {
+	var id int
+	err := pg.conn.QueryRow(context.Background(), QueryLookForClient, login, pwd).Scan(&id)
+	log.Println(err)
+	return id, err
+}
+
 // new returns pointer to the new instance of postrgres connection
 // or existing one if it was created earlier.
 func new() *pgconn {

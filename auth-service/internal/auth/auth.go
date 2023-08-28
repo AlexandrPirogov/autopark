@@ -57,6 +57,36 @@ func VerifyManagerCredentionals(login, pwd string, s db.CredentionalsStorer) (st
 	return refresh, nil
 }
 
+// RegisterClient register new Client in DB
+//
+// Pre-cond: given unique login and pwd for new Client and CredentionalsStorer to store in
+//
+// Post-cond: if Client was written to CredentaionalsStorer successfully then returns id of Client and nil.
+// Otherwise returns error
+func RegisterClient(login, pwd string, s db.CredentionalsStorer) (int, error) {
+	return s.RegisterClient(login, pwd)
+}
+
+// VerifyClientCredentionals checks if Clients's creds are correct
+//
+// Pre-cond: given Clients's login and pwd and CredentionalsStorer to search in
+//
+// Post-cond: if creds are correct - generate refresh token and returns it with nil
+// Otherwise returns empty string and error
+func VerifyClientCredentionals(login, pwd string, s db.CredentionalsStorer) (string, error) {
+	_, err := s.LookForClient(login, pwd)
+	if err != nil {
+		return "", fmt.Errorf("not found")
+	}
+
+	refresh, err := jwt.GenerateRefreshToken()
+	if err != nil {
+		return "", err
+	}
+
+	return refresh, nil
+}
+
 func StoreRefreshToken(token string, s db.JWTTokenStorer) error {
 	return s.SetRefreshToken(token)
 }

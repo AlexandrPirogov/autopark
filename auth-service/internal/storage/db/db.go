@@ -25,11 +25,27 @@ type CredentionalsStorer interface {
 	// Otherwise returns error
 	LookForManager(login, pwd string) (int, error)
 
-	// RegisterManager register new manager with given login and pwd
+	// LookForClient looking for Client with given login and pwd
 	//
-	// Pre-cond: given login and pwd to register new manager. Login must be unique
+	// Pre-cond: given login and pwd
 	//
-	// Post-cond: query was executed. If success, returns id of registere manager and nil.
+	// Post-cond: query was executed. If success, returns id of registere Client and nil.
+	// Otherwise returns error
+	LookForClient(login, pwd string) (int, error)
+
+	// RegisterClient register new Client with given login and pwd
+	//
+	// Pre-cond: given login and pwd to register new Client. Login must be unique
+	//
+	// Post-cond: query was executed. If success, returns id of registere Client and nil.
+	// Otherwise returns error
+	RegisterClient(login, pwd string) (int, error)
+
+	// RegisterClient register new Client with given login and pwd
+	//
+	// Pre-cond: given login and pwd to register new Client. Login must be unique
+	//
+	// Post-cond: query was executed. If success, returns id of registere Client and nil.
 	// Otherwise returns error
 	RegisterManager(login, pwd string) (int, error)
 }
