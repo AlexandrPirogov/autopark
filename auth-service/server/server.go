@@ -2,7 +2,7 @@ package server
 
 import (
 	"auth-service/server/api"
-	amiddle "auth-service/server/middleware"
+	m "auth-service/server/middleware"
 	"context"
 	"net"
 	"net/http"
@@ -24,7 +24,7 @@ func (s *server) ListenAndServe() error {
 	return s.http.ListenAndServe()
 }
 
-func (s *server) ShutDown(ctx context.Context) error {
+func (s *server) Shutdown(ctx context.Context) error {
 	return s.http.Shutdown(ctx)
 }
 
@@ -33,13 +33,17 @@ func New(ctx context.Context) *server {
 
 	r.Use(middleware.Logger)
 
-	r.HandleFunc("/login/admin", api.LoginAdmin)
+	r.Post("/login/admin", api.LoginAdmin)
+	r.Post("/login/manager", api.LoginManager)
 
 	r.Group(func(r chi.Router) {
-		r.Use(amiddle.AuthJWT)
+		r.Use(m.AuthJWT)
 		r.Get("/verify", api.VerifyJWT)
 		r.Get("/logout/admin", api.LogoutAdmin)
+		r.Get("/logount/manager", api.LogoutManager)
+		r.Post("/register/manager", api.RegisterManager)
 	})
+
 	return &server{
 		http: &http.Server{
 			Addr:        ":8080",

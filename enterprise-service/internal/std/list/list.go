@@ -1,10 +1,36 @@
+// list represents linked list data structre
 package list
 
-import (
-	"enterprise-service/internal/std"
-	"errors"
-	"fmt"
-)
+import "enterprise-service/internal/std"
+
+// listIterator type for linked list iterator
+// that moves from head to tail
+type listIterator[T any] struct {
+	curr *node[T]
+}
+
+// new creates new instance of iterator for linked list.
+// Take attention that value of iterator is pointer to node
+func new[T any](val *node[T]) listIterator[T] {
+	return listIterator[T]{
+		curr: val,
+	}
+}
+
+// Next tells is there are elements to iterate
+//
+// if there are elements to iterate then return true
+// otherwise returnes false
+func (l *listIterator[T]) Next() bool {
+	return l.curr != nil
+}
+
+// Curr returnes current element of iterator
+func (l *listIterator[T]) Curr() T {
+	res := l.curr.value
+	l.curr = l.curr.next
+	return res
+}
 
 type node[T any] struct {
 	next  *node[T]
@@ -12,7 +38,7 @@ type node[T any] struct {
 }
 
 // list structure to represent single linked lsit
-type list[T std.StdComparable[T]] struct {
+type list[T any] struct {
 	head       *node[T]
 	tail       *node[T]
 	deleteType map[bool]func(l *list[T], n T)
@@ -23,11 +49,26 @@ type list[T std.StdComparable[T]] struct {
 // Pre-cond: set std.StdComparable generic type
 //
 // New instance of list is created
-func New[T std.StdComparable[T]]() *list[T] {
+func New[T any]() *list[T] {
 	return &list[T]{
 		head: nil,
 		tail: nil,
 	}
+}
+
+// Iterator creates new instance of Iterator to inspect elements
+//
+// Pre-cond:
+//
+// Post-cond: returned instance of iterator
+func (l *list[T]) Iterator() std.Iterator[T] {
+	var begin *node[T]
+	if l == nil || l.head == nil {
+		begin = nil
+	} else {
+		begin = l.head
+	}
+	return &listIterator[T]{curr: begin}
 }
 
 // Add adds given elem at the tail
@@ -35,7 +76,7 @@ func New[T std.StdComparable[T]]() *list[T] {
 // Pre-cond: given element to add
 //
 // Post-cond: list's tail now is equal to given element
-func (l *list[T]) Add(t T) {
+func (l *list[T]) PushBack(t T) {
 	item := node[T]{next: nil, value: t}
 	if l.head == nil {
 		l.head = &item
@@ -85,39 +126,6 @@ func (l *list[T]) PopFront() (T, bool) {
 	def = l.head.value
 	l.head = l.head.next
 	return def, true
-}
-
-// Find searches for given value in list
-//
-// Pre-cond: given value to find
-//
-// Post-cond: if value exists - finds it and returns value and nil error
-// Otherwise returns default value and error
-func (l *list[T]) Find(n T) (node[T], error) {
-	var def T
-	if l == nil || l.head == nil {
-		return node[T]{}, fmt.Errorf("not found")
-	}
-	res := &node[T]{value: def, next: nil}
-
-	tmp := l.head
-	found := false
-
-	pred := func() bool { return tmp != nil && !found }
-	act := func() {
-		if tmp.value.Compare(n) == 0 {
-			res = tmp
-			found = true
-		}
-		tmp = tmp.next
-	}
-
-	iter(pred, act)
-
-	if !found {
-		return *res, errors.New("not found")
-	}
-	return *res, nil
 }
 
 func iter(cond func() bool, action func()) {

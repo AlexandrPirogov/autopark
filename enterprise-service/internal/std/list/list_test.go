@@ -34,7 +34,7 @@ func TestCreateList(t *testing.T) {
 func TestAddInEmptyList(t *testing.T) {
 	sut := New[Integer]()
 
-	sut.Add(Integer(10))
+	sut.PushBack(Integer(10))
 
 	assert.Equal(t, sut.Count(), 1)
 	assert.Equal(t, sut.head, sut.tail)
@@ -52,51 +52,8 @@ func TestAddManyList(t *testing.T) {
 
 	for _, edge := range tests {
 		t.Run(fmt.Sprintf("%d", edge.value), func(t *testing.T) {
-			sut.Add(Integer(edge.value))
+			sut.PushBack(Integer(edge.value))
 			assert.Equal(t, sut.tail, &edge)
-		})
-	}
-}
-
-// checks find method with list
-// with distinct values
-func TestFindInSetList(t *testing.T) {
-	sut := New[Integer]()
-	var i Integer
-	for i = 0; i < 10; i++ {
-		sut.Add(Integer(i))
-	}
-
-	for i = 0; i < 10; i++ {
-		t.Run("", func(t *testing.T) {
-			res, err := sut.Find(i)
-			assert.Nil(t, err)
-			assert.Equal(t, i, res.value)
-		})
-	}
-}
-
-// Checks find method in empty list
-func TestFindInEmptyList(t *testing.T) {
-	sut := New[Integer]()
-	_, err := sut.Find(10)
-	assert.NotNil(t, err)
-}
-
-// Checks find method in list with duplicates
-func TestFindInList(t *testing.T) {
-	duplicate := Integer(10)
-	sut := New[Integer]()
-	var i Integer
-	for i = 0; i < 10; i++ {
-		sut.Add(Integer(duplicate))
-	}
-
-	for i = 0; i < 10; i++ {
-		t.Run("", func(t *testing.T) {
-			res, err := sut.Find(duplicate)
-			assert.Nil(t, err)
-			assert.Equal(t, duplicate, res.value)
 		})
 	}
 }
@@ -119,7 +76,7 @@ func TestPopFrontInFilled(t *testing.T) {
 	sut := New[Integer]()
 	var i Integer
 	for i = 0; i < 10; i++ {
-		sut.Add(Integer(i))
+		sut.PushBack(Integer(i))
 	}
 
 	for i = 0; i < 10; i++ {
@@ -129,4 +86,28 @@ func TestPopFrontInFilled(t *testing.T) {
 			assert.Equal(t, Integer(i), res)
 		})
 	}
+}
+
+func TestIteratorCreateInEmptyList(t *testing.T) {
+	l := New[Integer]()
+	sut := l.Iterator()
+
+	assert.False(t, sut.Next())
+}
+
+func TestIteratorMovementInNonEmptyList(t *testing.T) {
+	l := New[Integer]()
+	var i Integer
+	for i = 0; i < 10; i++ {
+		l.PushBack(Integer(i))
+	}
+
+	sut := l.Iterator()
+	for expected := 0; expected < 10; expected++ {
+		actual := sut.Curr()
+		sut.Next()
+		assert.Equal(t, Integer(expected), actual)
+	}
+
+	assert.False(t, sut.Next())
 }

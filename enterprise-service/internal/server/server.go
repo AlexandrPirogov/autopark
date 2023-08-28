@@ -1,3 +1,5 @@
+// package server wrapps an http.Server and collects api
+// for enterprise-service
 package server
 
 import (
@@ -7,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 type EnterpriseServer interface {
@@ -18,19 +21,28 @@ type server struct {
 	http *http.Server
 }
 
+// ListenAndServer just a wrapper around http.ListenAndServe
 func (s *server) ListenAndServe() error {
 	return s.http.ListenAndServe()
 }
 
-func (s *server) ShutDown(ctx context.Context) error {
+// Shutdown just a wrapper around http.Shutdown
+func (s *server) Shutdown(ctx context.Context) error {
 	return s.http.Shutdown(ctx)
 }
 
+// New returns new instance of http.Server
+//
+// Pre-cond: given context
+//
+// Post-cond: pointer to the new instance of server for returned
 func New(ctx context.Context) *server {
 	r := chi.NewRouter()
-
-	r.HandleFunc("/register", api.RegisterEnterprise)
-	r.HandleFunc("/read", api.ReadEnerprises)
+	r.Use(middleware.Logger)
+	r.Post("/register", api.RegisterEnterprise)
+	r.Get("/{id}/list", api.ReadEnerprise)
+	r.Post("/{id}/register/manager", api.RegisterManager)
+	r.Post("/list", api.ReadEnerprises)
 	return &server{
 		http: &http.Server{
 			Addr:        ":8080",

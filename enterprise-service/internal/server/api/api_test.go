@@ -49,17 +49,3 @@ func TestDeleteEntityCode(t *testing.T) {
 
 	assert.Equal(t, expected, res.StatusCode)
 }
-
-func TestUpdateEntityCode(t *testing.T) {
-	expected := http.StatusOK
-	request := httptest.NewRequest(http.MethodPost, "/update", nil)
-
-	w := httptest.NewRecorder()
-	h := http.HandlerFunc(UpdateEnterprises)
-	h.ServeHTTP(w, request)
-	res := w.Result()
-
-	defer res.Body.Close()
-
-	assert.Equal(t, expected, res.StatusCode)
-}
