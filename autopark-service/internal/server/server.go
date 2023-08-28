@@ -36,7 +36,7 @@ func New(ctx context.Context) *server {
 	r.Post("/car/register", api.CreateCar)
 	r.Post("/car/list", api.ReadCars)
 	r.Post("/car/remove", api.DeleteCar)
-	//r.Get("/car/set/list", api.ReadSetCars)
+	r.Get("/car/set/list", api.ReadSetCars)
 
 	r.Put("/car/{uid}/set", api.SetCar)
 	r.Put("/car/{uid}/unset", api.UnsetCar)

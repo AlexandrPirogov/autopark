@@ -26,6 +26,10 @@ func ReadCars(pattern car.Car, s db.CarStorer) (std.Linked[car.Car], error) {
 	return s.ReadCars(pattern)
 }
 
+func ReadSetCars(s db.CarStorer) (std.Linked[car.Car], error) {
+	return s.ReadSetCars()
+}
+
 // Delete cars from storage
 //
 // Pre-cond: given car entity and entity implementing CarStorer interafce

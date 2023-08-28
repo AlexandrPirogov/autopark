@@ -41,6 +41,13 @@ const QuerySetCar = `update cars_for_booking set status = 'set' where id = (sele
 
 const QueryUnsetCar = `update cars_for_booking set status = 'unset' where id = (select id from cars where uid = $1)`
 
+const QueryReadSetCars = `
+select c.uid, b.brand, type, status from cars_for_booking cfb
+join cars c on c.id = cfb.car_id
+join brands b on c.brand_id = b.id
+where cfb.status = 'set'
+`
+
 // DeleteCars executing QueryDeleteCar query
 //
 // Pre-cond: given car-pattern
@@ -76,6 +83,27 @@ func (pg *pgconn) ReadCars(c car.Car) (std.Linked[car.Car], error) {
 		scanErr := rows.Scan(&c.Brand, &c.Type, &c.UID)
 		if scanErr != nil {
 			log.Println(err)
+			continue
+		}
+		res.PushBack(c)
+	}
+
+	return res, nil
+}
+
+func (pg *pgconn) ReadSetCars() (std.Linked[car.Car], error) {
+	rows, err := pg.conn.Query(context.Background(), QueryReadSetCars)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	res := list.New[car.Car]()
+	for rows.Next() {
+		var c car.Car
+		scanErr := rows.Scan(&c.UID, &c.Brand, &c.Type, &c.Status)
+		if scanErr != nil {
+			log.Println(scanErr)
 			continue
 		}
 		res.PushBack(c)

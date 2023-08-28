@@ -61,6 +61,28 @@ func ReadCars(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseBody)
 }
 
+// ReadCars receives json body as pattern, unmarshal it
+// and reads all cars from db that match the pattern
+func ReadSetCars(w http.ResponseWriter, r *http.Request) {
+
+	l, err := kernel.ReadSetCars(db.GetConnInstance())
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	slice := std.AsSlice(l.Iterator())
+
+	responseBody, marshalErr := json.Marshal(slice)
+	if marshalErr != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(responseBody)
+}
+
 // DeleteCar receives json body as pattern, unmarshal it
 // and deletes all cars from db that match the pattern
 func DeleteCar(w http.ResponseWriter, r *http.Request) {

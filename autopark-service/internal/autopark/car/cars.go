@@ -6,7 +6,8 @@ type Brand struct {
 }
 
 type Car struct {
-	UID   string `json:"uid"`
-	Brand string `json:"brand"`
-	Type  string `json:"type"`
+	UID    string `json:"uid"`
+	Brand  string `json:"brand"`
+	Type   string `json:"type"`
+	Status string `json:"status"`
 }
