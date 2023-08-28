@@ -67,7 +67,11 @@ func (r *rest) RegisterManager(m client.Manager) (client.Manager, error) {
 func (r *rest) executeRequest(method string, url string, body []byte) (*http.Response, error) {
 	reader := bytes.NewReader(body)
 	request, reqErr := http.NewRequest(http.MethodPost, url, reader)
-	request.Header.Add("refresh-token", r.token)
+	c := http.Cookie{
+		Name:  client.RerfeshTokenCookieField,
+		Value: r.token,
+	}
+	request.AddCookie(&c)
 	if reqErr != nil {
 		log.Println(reqErr)
 		return nil, reqErr

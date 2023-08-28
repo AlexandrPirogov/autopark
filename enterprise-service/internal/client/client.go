@@ -1,3 +1,4 @@
+// package client hold URLs and interface ManagerHandler for requests 
 package client
 
 // ApiGateway URL
