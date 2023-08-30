@@ -29,7 +29,7 @@ type CredentionalsStorer interface {
 	//
 	// Pre-cond: given login and pwd
 	//
-	// Post-cond: query was executed. If success, returns id of registere Client and nil.
+	// Post-cond: query was executed. If success, returns id of Client and nil.
 	// Otherwise returns error
 	LookForClient(login, pwd string) (int, error)
 
@@ -37,7 +37,7 @@ type CredentionalsStorer interface {
 	//
 	// Pre-cond: given login and pwd to register new Client. Login must be unique
 	//
-	// Post-cond: query was executed. If success, returns id of registere Client and nil.
+	// Post-cond: query was executed. If success, returns id of registered Client and nil.
 	// Otherwise returns error
 	RegisterClient(login, pwd string) (int, error)
 
