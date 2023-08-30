@@ -19,3 +19,9 @@ CREATE TABLE CLIENTS(
 INSERT INTO ADMINS VALUES(default, 'admin', 'admin');
 INSERT INTO ADMINS VALUES(default, 'admin1', 'admin1');
 INSERT INTO ADMINS VALUES(default, 'admin2', 'admin2');
+
+INSERT INTO MANAGERS VALUES(default, 'manager', 'manager');
+INSERT INTO MANAGERS VALUES(default, 'manager1', 'manager1');
+
+INSERT INTO CLIENTS VALUES(default, 'client', 'client');
+INSERT INTO CLIENTS VALUES(default, 'client1', 'client1');
