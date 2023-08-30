@@ -63,3 +63,10 @@ func TestCantCancelAfterApprove(t *testing.T) {
 	assert.Equal(t, StateApproved, sut.Current())
 	assert.NotNil(t, sut.Cancel())
 }
+
+func TestCantApproveWithoutChoose(t *testing.T) {
+	sut := New(0, 0)
+
+	err := sut.Approve()
+	assert.NotNil(t, err)
+}
