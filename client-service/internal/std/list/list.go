@@ -1,6 +1,6 @@
 package list
 
-import "manager-service/internal/std"
+import "client-service/internal/std"
 
 // listIterator type for linked list iterator
 // that moves from head to tail
