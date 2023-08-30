@@ -130,3 +130,30 @@ func ApproveBooking(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
+func FinishBooking(w http.ResponseWriter, r *http.Request) {
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var u entity.Booking
+	unmarshalErr := json.Unmarshal(body, &u)
+	if unmarshalErr != nil {
+		log.Println(unmarshalErr)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	chooseErr := watcher.Finish(u, watcher.GetInstance())
+	if chooseErr != nil {
+		log.Println(chooseErr)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}

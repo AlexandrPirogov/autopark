@@ -35,6 +35,7 @@ func New(ctx context.Context) *server {
 	r.Post("/cancel", api.CancelBooking)
 	r.Post("/create", api.CreateBooking)
 	r.Post("/choose", api.ChooseBooking)
+	r.Post("/finish", api.FinishBooking)
 
 	return &server{
 		http: &http.Server{
