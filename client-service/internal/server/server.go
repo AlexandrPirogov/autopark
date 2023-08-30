@@ -2,8 +2,8 @@
 package server
 
 import (
-	"client-service/internal/server/api/auth"
 	"client-service/internal/server/api/autopark"
+	"client-service/internal/server/api/booking"
 	"context"
 	"net"
 	"net/http"
@@ -40,10 +40,14 @@ func New(ctx context.Context) *server {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
-	r.HandleFunc("/register", auth.Register)
+	r.Post("/brand/list", autopark.BrandList)
+	r.Post("/car/list", autopark.CarList)
 
-	r.HandleFunc("/brand/list", autopark.BrandList)
-	r.HandleFunc("/car/list", autopark.CarList)
+	r.Post("/booking/approve", booking.Approve)
+	r.Post("/booking/cancel", booking.Cancel)
+	r.Post("/booking/choose", booking.Choose)
+	r.Post("/booking/create", booking.Create)
+	r.Post("/booking/finish", booking.Finish)
 
 	return &server{
 		http: &http.Server{
