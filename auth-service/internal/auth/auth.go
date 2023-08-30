@@ -7,6 +7,15 @@ import (
 	"fmt"
 )
 
+type ClientCreds struct {
+	UserID int    `json:"u_id"`
+	jwt    string `json: "-"`
+}
+
+func (c ClientCreds) RefreshToken() string {
+	return c.jwt
+}
+
 // VerifyAdminCredentionals checks if admin's creds are correct
 //
 // Pre-cond: given admin's login and pwd and CredentionalsStorer to search in
@@ -73,18 +82,21 @@ func RegisterClient(login, pwd string, s db.CredentionalsStorer) (int, error) {
 //
 // Post-cond: if creds are correct - generate refresh token and returns it with nil
 // Otherwise returns empty string and error
-func VerifyClientCredentionals(login, pwd string, s db.CredentionalsStorer) (string, error) {
-	_, err := s.LookForClient(login, pwd)
+func VerifyClientCredentionals(login, pwd string, s db.CredentionalsStorer) (ClientCreds, error) {
+	var c ClientCreds
+	id, err := s.LookForClient(login, pwd)
 	if err != nil {
-		return "", fmt.Errorf("not found")
+		return c, fmt.Errorf("not found")
 	}
 
 	refresh, err := jwt.GenerateRefreshToken()
 	if err != nil {
-		return "", err
+		return c, err
 	}
+	c.UserID = id
+	c.jwt = refresh
 
-	return refresh, nil
+	return c, nil
 }
 
 func StoreRefreshToken(token string, s db.JWTTokenStorer) error {

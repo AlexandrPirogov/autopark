@@ -26,21 +26,30 @@ func LoginClient(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	RT, err := auth.VerifyClientCredentionals(c.Login, c.Pwd, db.GetCurrentCredsStorerInstance())
+	client, err := auth.VerifyClientCredentionals(c.Login, c.Pwd, db.GetCurrentCredsStorerInstance())
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	err = auth.StoreRefreshToken(RT, db.GetCurrentJWTStorerInstance())
+	err = auth.StoreRefreshToken(client.RefreshToken(), db.GetCurrentJWTStorerInstance())
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	cookie := setRefreshCookieToken(RT)
+	cookie := setRefreshCookieToken(client.RefreshToken())
 	http.SetCookie(w, cookie)
+
+	responseBody, marshalErr := json.Marshal(client)
+	if marshalErr != nil {
+		log.Println(marshalErr)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
+	w.Write(responseBody)
 }
 
 // Register Client registers new Client with given creds
