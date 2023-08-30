@@ -7,9 +7,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"strconv"
-
-	"github.com/go-chi/chi/v5"
 )
 
 func CreateBooking(w http.ResponseWriter, r *http.Request) {
@@ -50,14 +47,6 @@ func CreateBooking(w http.ResponseWriter, r *http.Request) {
 }
 
 func ChooseBooking(w http.ResponseWriter, r *http.Request) {
-	bookingIDParam := chi.URLParam(r, "id")
-	bookingID, convErr := strconv.Atoi(bookingIDParam)
-	if convErr != nil {
-		log.Println(convErr)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Println(err)
@@ -72,7 +61,7 @@ func ChooseBooking(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	u.ID = bookingID
+
 	if u.CarID == 0 {
 		log.Println("car must be set")
 		w.WriteHeader(http.StatusBadRequest)
@@ -116,13 +105,6 @@ func CancelBooking(w http.ResponseWriter, r *http.Request) {
 }
 
 func ApproveBooking(w http.ResponseWriter, r *http.Request) {
-	bookingIDParam := chi.URLParam(r, "id")
-	bookingID, convErr := strconv.Atoi(bookingIDParam)
-	if convErr != nil {
-		log.Println(convErr)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -139,7 +121,6 @@ func ApproveBooking(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u.ID = bookingID
 	chooseErr := watcher.Approve(u, watcher.GetInstance())
 	if chooseErr != nil {
 		log.Println(chooseErr)

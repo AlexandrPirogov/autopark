@@ -31,10 +31,10 @@ func New(ctx context.Context) *server {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
-	r.Post("/approve/{id}", api.ApproveBooking)
-	r.Post("/cancel/{id}", api.CancelBooking)
+	r.Post("/approve", api.ApproveBooking)
+	r.Post("/cancel", api.CancelBooking)
 	r.Post("/create", api.CreateBooking)
-	r.Post("/choose/{id}", api.ChooseBooking)
+	r.Post("/choose", api.ChooseBooking)
 
 	return &server{
 		http: &http.Server{
