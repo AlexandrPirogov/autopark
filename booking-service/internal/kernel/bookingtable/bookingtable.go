@@ -5,8 +5,9 @@ import (
 	"booking-service/internal/entity"
 	"booking-service/internal/kernel/bookingfsm"
 	"fmt"
-	"log"
 	"sync"
+
+	"github.com/rs/zerolog/log"
 )
 
 // New creates and returns pointer to the new instance of btable
@@ -53,7 +54,7 @@ func (bt *btable) Choose(b entity.Booking) error {
 
 		err := val.ChooseCar()
 		if err != nil {
-			log.Println(err)
+			log.Warn().Msgf("%v", err)
 			return err
 		}
 	}
@@ -70,17 +71,17 @@ func (bt *btable) Choose(b entity.Booking) error {
 func (bt *btable) Approve(b entity.Booking) error {
 	bt.mutex.RLock()
 	defer bt.mutex.RUnlock()
-	log.Printf("booking %v was approved", b)
+	log.Fatal().Msgf("booking %v was approved", b)
 	if val, ok := bt.fsms[b.UserID]; ok {
 		bt.fsms[b.UserID].Book = b
 
 		err := val.Approve()
 		if err != nil {
-			log.Println("err while approving booking: ", err)
+			log.Warn().Msgf("err while approving booking: %v", err)
 			return err
 		}
 
-		log.Printf("deleting %v", b)
+		log.Fatal().Msgf("deleting %v", b)
 		delete(bt.fsms, b.UserID)
 	}
 	return nil
@@ -100,11 +101,11 @@ func (bt *btable) Cancel(b entity.Booking) error {
 	if val, ok := bt.fsms[b.UserID]; ok {
 		err := val.Cancel()
 		if err != nil {
-			log.Println(err)
+			log.Warn().Msgf("%v", err)
 			return err
 		}
 
-		log.Printf("deleting %v", b)
+		log.Fatal().Msgf("deleting %v", b)
 		delete(bt.fsms, b.UserID)
 		return nil
 	}
@@ -119,7 +120,7 @@ func (bt *btable) Cancel(b entity.Booking) error {
 func (bt *btable) ExistsInTable(b entity.Booking) bool {
 	bt.mutex.RLock()
 	defer bt.mutex.RUnlock()
-	log.Printf("checking booking %v ", b)
+	log.Fatal().Msgf("checking booking %v ", b)
 	_, ok := bt.fsms[b.UserID]
 	return ok
 }

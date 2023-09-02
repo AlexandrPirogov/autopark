@@ -7,9 +7,9 @@ import (
 	"booking-service/internal/entity"
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/looplab/fsm"
+	"github.com/rs/zerolog/log"
 )
 
 const (
@@ -61,7 +61,7 @@ func (b *BookingFSM) Current() string {
 func (b *BookingFSM) ChooseCar() error {
 	err := b.fsm.Event(context.Background(), StateChoosedCar)
 	if err != nil {
-		log.Println(err)
+		log.Debug().Msgf("%v", err)
 		return err
 	}
 	fmt.Printf("Booking with id %d has choosen car. Current fsm state: %s\n", b.Book.ID, b.fsm.Current())
@@ -73,7 +73,7 @@ func (b *BookingFSM) ChooseCar() error {
 func (b *BookingFSM) Approve() error {
 	err := b.fsm.Event(context.Background(), StateApproved)
 	if err != nil {
-		log.Println(err)
+		log.Debug().Msgf("%v", err)
 		return err
 	}
 	fmt.Printf("Booking with id %d has approved. Current fsm state: %s\n", b.Book.ID, b.fsm.Current())
@@ -85,7 +85,7 @@ func (b *BookingFSM) Approve() error {
 func (b *BookingFSM) Cancel() error {
 	err := b.fsm.Event(context.Background(), StateCanceled)
 	if err != nil {
-		log.Println("cancel event called ", err)
+		log.Debug().Msgf("cancel event called %v", err)
 		return err
 	}
 	fmt.Printf("Booking with id %d has canceled. Current fsm state: %s\n", b.Book.ID, b.fsm.Current())

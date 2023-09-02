@@ -4,8 +4,9 @@ import (
 	"booking-service/internal/entity"
 	"booking-service/internal/kernel/bookingfsm"
 	"context"
-	"log"
 	"time"
+
+	"github.com/rs/zerolog/log"
 )
 
 // QueryBookingApproved set status of booking to approved
@@ -63,7 +64,7 @@ func (pg *pgconn) Created(b entity.Booking) (int, error) {
 	var id int
 	err := pg.conn.QueryRow(context.Background(), QueryBookingCreate, b.UserID, bookingfsm.StateCreated, time.Now(), time.Now()).Scan(&id)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 	}
 	return id, err
 }

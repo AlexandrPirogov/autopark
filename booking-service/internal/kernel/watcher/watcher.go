@@ -6,9 +6,10 @@ import (
 	"booking-service/internal/entity"
 	btable "booking-service/internal/kernel/bookingtable"
 	"fmt"
-	"log"
 	"sync"
 	"time"
+
+	"github.com/rs/zerolog/log"
 )
 
 // Interface for btable
@@ -57,19 +58,19 @@ func new() *watcher {
 // If transformation was failed then cancel the booking
 func Approve(b entity.Booking, w *watcher) error {
 	if !w.table.ExistsInTable(b) {
-		log.Println("cant approve not existing booking")
+		log.Debug().Msgf("cant approve not existing booking")
 		return fmt.Errorf("cant approve not existing booking")
 	}
 
 	tableErr := w.table.Approve(b)
 	if tableErr != nil {
-		log.Println("btable err ", tableErr)
+		log.Debug().Msgf("btable err %v", tableErr)
 		return tableErr
 	}
 
 	dbErr := w.s.Approved(b)
 	if dbErr != nil {
-		log.Println("db err ", dbErr)
+		log.Debug().Msgf("db err %v", dbErr)
 		return dbErr
 	}
 
@@ -88,19 +89,19 @@ func Approve(b entity.Booking, w *watcher) error {
 func Cancel(b entity.Booking, w *watcher) error {
 
 	if !w.table.ExistsInTable(b) {
-		log.Println("cant cancel not existing booking")
+		log.Debug().Msgf("cant cancel not existing booking")
 		return fmt.Errorf("cant cancel not existing booking")
 	}
 
 	tableErr := w.table.Cancel(b)
 	if tableErr != nil {
-		log.Println(tableErr)
+		log.Debug().Msgf("%v", tableErr)
 		return tableErr
 	}
 
 	dbErr := w.s.Canceled(b)
 	if dbErr != nil {
-		log.Println(dbErr)
+		log.Debug().Msgf("%v", dbErr)
 		return dbErr
 	}
 
@@ -119,19 +120,19 @@ func Cancel(b entity.Booking, w *watcher) error {
 func Choose(b entity.Booking, w *watcher) error {
 
 	if !w.table.ExistsInTable(b) {
-		log.Println("cant Choose not existing booking")
+		log.Debug().Msgf("cant Choose not existing booking")
 		return fmt.Errorf("cant Choose not existing booking")
 	}
 
 	tableErr := w.table.Choose(b)
 	if tableErr != nil {
-		log.Println(tableErr)
+		log.Debug().Msgf("%v", tableErr)
 		return tableErr
 	}
 
 	dbErr := w.s.CarChoosed(b)
 	if dbErr != nil {
-		log.Println(dbErr)
+		log.Debug().Msgf("%v", dbErr)
 		return dbErr
 	}
 
@@ -155,14 +156,14 @@ func Create(b entity.Booking, w *watcher) (int, error) {
 
 	id, dbErr := w.s.Created(b)
 	if dbErr != nil {
-		log.Println(dbErr)
+		log.Debug().Msgf("%v", dbErr)
 		return -1, dbErr
 	}
 
 	b.ID = id
 	tableErr := w.table.Create(b)
 	if tableErr != nil {
-		log.Println(tableErr)
+		log.Debug().Msgf("%v", tableErr)
 		return -1, tableErr
 	}
 	go func() {
@@ -187,13 +188,13 @@ func Create(b entity.Booking, w *watcher) (int, error) {
 // If it exists returns error otherwise returnes the result of transforamtion.
 func Finish(b entity.Booking, w *watcher) error {
 	if w.table.ExistsInTable(b) {
-		log.Println("cant finish existing booking")
+		log.Debug().Msgf("cant finish existing booking")
 		return fmt.Errorf("cant finish existing booking")
 	}
 
 	dbErr := w.s.Finish(b)
 	if dbErr != nil {
-		log.Println(dbErr)
+		log.Debug().Msgf("%v", dbErr)
 		return dbErr
 	}
 

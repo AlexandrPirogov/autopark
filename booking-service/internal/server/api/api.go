@@ -5,14 +5,15 @@ import (
 	"booking-service/internal/kernel/watcher"
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 )
 
 func CreateBooking(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v ", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -20,14 +21,14 @@ func CreateBooking(w http.ResponseWriter, r *http.Request) {
 	var u entity.Booking
 	unmarshalErr := json.Unmarshal(body, &u)
 	if unmarshalErr != nil {
-		log.Println(unmarshalErr)
+		log.Warn().Msgf("%v ", unmarshalErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	bookingID, createErr := watcher.Create(u, watcher.GetInstance())
 	if createErr != nil {
-		log.Println(createErr)
+		log.Warn().Msgf("%v", createErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -36,7 +37,7 @@ func CreateBooking(w http.ResponseWriter, r *http.Request) {
 
 	responseBody, marshalErr := json.Marshal(u)
 	if marshalErr != nil {
-		log.Println(marshalErr)
+		log.Warn().Msgf("%v", marshalErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -49,7 +50,7 @@ func CreateBooking(w http.ResponseWriter, r *http.Request) {
 func ChooseBooking(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v ", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -57,20 +58,21 @@ func ChooseBooking(w http.ResponseWriter, r *http.Request) {
 	var u entity.Booking
 	unmarshalErr := json.Unmarshal(body, &u)
 	if unmarshalErr != nil {
-		log.Println(unmarshalErr)
+		log.Warn().Msgf("%v", unmarshalErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	if u.CarID == 0 {
-		log.Println("car must be set")
+		log.Warn().Msgf("%v", "car must be set")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	log.Printf("writing booking %v", u)
+
+	log.Debug().Msgf("writing booking %v", u)
 	chooseErr := watcher.Choose(u, watcher.GetInstance())
 	if chooseErr != nil {
-		log.Println(chooseErr)
+		log.Warn().Msgf("%v", chooseErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -81,7 +83,7 @@ func ChooseBooking(w http.ResponseWriter, r *http.Request) {
 func CancelBooking(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v ", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -89,14 +91,14 @@ func CancelBooking(w http.ResponseWriter, r *http.Request) {
 	var u entity.Booking
 	unmarshalErr := json.Unmarshal(body, &u)
 	if unmarshalErr != nil {
-		log.Println(unmarshalErr)
+		log.Warn().Msgf("%v", unmarshalErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	chooseErr := watcher.Cancel(u, watcher.GetInstance())
 	if chooseErr != nil {
-		log.Println(chooseErr)
+		log.Warn().Msgf("%v", chooseErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -108,7 +110,7 @@ func ApproveBooking(w http.ResponseWriter, r *http.Request) {
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v ", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -116,14 +118,14 @@ func ApproveBooking(w http.ResponseWriter, r *http.Request) {
 	var u entity.Booking
 	unmarshalErr := json.Unmarshal(body, &u)
 	if unmarshalErr != nil {
-		log.Println(unmarshalErr)
+		log.Warn().Msgf("%v", unmarshalErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	chooseErr := watcher.Approve(u, watcher.GetInstance())
 	if chooseErr != nil {
-		log.Println(chooseErr)
+		log.Warn().Msgf("%v", chooseErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -135,7 +137,7 @@ func FinishBooking(w http.ResponseWriter, r *http.Request) {
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v ", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -143,14 +145,14 @@ func FinishBooking(w http.ResponseWriter, r *http.Request) {
 	var u entity.Booking
 	unmarshalErr := json.Unmarshal(body, &u)
 	if unmarshalErr != nil {
-		log.Println(unmarshalErr)
+		log.Warn().Msgf("%v", unmarshalErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	chooseErr := watcher.Finish(u, watcher.GetInstance())
 	if chooseErr != nil {
-		log.Println(chooseErr)
+		log.Warn().Msgf("%v", chooseErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
