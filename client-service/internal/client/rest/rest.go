@@ -5,8 +5,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 )
 
 // New returns pointer to new instance of Rest
@@ -33,7 +34,7 @@ type Rest struct {
 func executeRequest[T any](method string, url string, payload T, r *Rest) (*http.Response, error) {
 	marshaled, err := json.Marshal(payload)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		return nil, err
 	}
 	reader := bytes.NewReader(marshaled)
@@ -44,18 +45,18 @@ func executeRequest[T any](method string, url string, payload T, r *Rest) (*http
 		Value: r.token,
 	}
 	request.AddCookie(&c)
-	log.Printf("executing request from client to %s with %s", url, marshaled)
+	log.Warn().Msgf("executing request from client to %s with %s", url, marshaled)
 	if errReq != nil {
-		log.Println(errReq)
+		log.Warn().Msgf("%v", errReq)
 		return nil, errReq
 	}
 
 	response, errResp := r.client.Do(request)
 	if errResp != nil {
-		log.Println(errResp)
+		log.Warn().Msgf("%v", errResp)
 		return nil, errResp
 	}
-	log.Printf("got response from %s. Status: %d, err: %v", url, response.StatusCode, errResp)
+	log.Warn().Msgf("got response from %s. Status: %d, err: %v", url, response.StatusCode, errResp)
 	return response, nil
 }
 
@@ -63,13 +64,13 @@ func unmarshalResponse[T any](response *http.Response) (T, error) {
 	var res T
 	responseBody, readResponseErr := io.ReadAll(response.Body)
 	if readResponseErr != nil {
-		log.Println(readResponseErr)
+		log.Warn().Msgf("%v", readResponseErr)
 		return res, readResponseErr
 	}
 
 	unmarshalErr := json.Unmarshal(responseBody, &res)
 	if unmarshalErr != nil {
-		log.Println(unmarshalErr)
+		log.Warn().Msgf("%v", unmarshalErr)
 		return res, unmarshalErr
 	}
 

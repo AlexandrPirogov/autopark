@@ -3,11 +3,12 @@ package main
 import (
 	"client-service/internal/server"
 	"context"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/rs/zerolog/log"
 )
 
 func main() {
@@ -15,26 +16,26 @@ func main() {
 	s := server.New(ctx)
 	go func() {
 		if err := s.ListenAndServe(); err != nil {
-			log.Fatal(err)
+			log.Fatal().Msgf("%v", err)
 		}
 	}()
 
 	cancelChan := make(chan os.Signal, 1)
 	signal.Notify(cancelChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGHUP, syscall.SIGQUIT)
-	log.Println("Running client-service")
+	log.Warn().Msg("Running client-service")
 	sig := <-cancelChan
-	log.Printf("Got signal %v\n", sig)
+	log.Warn().Msgf("Got signal %v\n", sig)
 
 	ctxShutdown, cancelShutdown := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancelShutdown()
 
 	if err := s.Shutdown(ctxShutdown); err != nil {
-		log.Printf("Shutdown error %v\n", err)
+		log.Warn().Msgf("Shutdown error %v\n", err)
 		defer os.Exit(1)
 		return
 	}
 
-	log.Printf("Server shutdowned\n")
+	log.Warn().Msgf("Server shutdowned\n")
 
 	cancel()
 	defer os.Exit(0)

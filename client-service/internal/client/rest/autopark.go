@@ -4,8 +4,9 @@ import (
 	"client-service/internal/client"
 	"client-service/internal/entity/autopark"
 	"fmt"
-	"log"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 )
 
 // ReadBrands making request to list avaible brands in autopark-service
@@ -18,9 +19,9 @@ import (
 func (r *Rest) ReadBrands(pattern autopark.Brand) ([]autopark.Brand, error) {
 
 	response, errResp := executeRequest(http.MethodPost, client.ApiGatewayHost+client.BrandListrURL, pattern, r)
-	log.Printf("got response after request %v, %v", response, errResp)
+	log.Warn().Msgf("got response after request %v, %v", response, errResp)
 	if errResp != nil {
-		log.Println(errResp)
+		log.Warn().Msgf("%v", errResp)
 		return nil, errResp
 	}
 
@@ -28,7 +29,7 @@ func (r *Rest) ReadBrands(pattern autopark.Brand) ([]autopark.Brand, error) {
 
 	brands, unmarshalErr := unmarshalResponse[[]autopark.Brand](response)
 	if unmarshalErr != nil {
-		log.Println(unmarshalErr)
+		log.Warn().Msgf("%v", unmarshalErr)
 		return nil, unmarshalErr
 	}
 
@@ -48,7 +49,7 @@ func (r *Rest) ReadBrands(pattern autopark.Brand) ([]autopark.Brand, error) {
 func (r *Rest) ReadCars(pattern autopark.Car) ([]autopark.Car, error) {
 	response, errResp := executeRequest(http.MethodPost, client.ApiGatewayHost+client.CarListURL, pattern, r)
 	if errResp != nil {
-		log.Println(errResp)
+		log.Warn().Msgf("%v", errResp)
 		return nil, errResp
 	}
 
@@ -56,7 +57,7 @@ func (r *Rest) ReadCars(pattern autopark.Car) ([]autopark.Car, error) {
 
 	cars, unmarshalErr := unmarshalResponse[[]autopark.Car](response)
 	if unmarshalErr != nil {
-		log.Println(unmarshalErr)
+		log.Warn().Msgf("%v", unmarshalErr)
 		return nil, unmarshalErr
 	}
 

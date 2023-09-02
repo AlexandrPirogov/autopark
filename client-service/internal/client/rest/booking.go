@@ -4,8 +4,9 @@ import (
 	"client-service/internal/client"
 	"client-service/internal/entity"
 	"fmt"
-	"log"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 )
 
 // BookingApprove send request to service booking to approve given booking
@@ -16,9 +17,9 @@ import (
 func (r *Rest) BookingApprove(b entity.Booking) (entity.Booking, error) {
 	var createdBooking entity.Booking
 	response, errResp := executeRequest(http.MethodPost, client.ApiGatewayHost+client.BookingApproveURL, b, r)
-	log.Printf("got response after request %v, %v", response, errResp)
+	log.Warn().Msgf("got response after request %v, %v", response, errResp)
 	if errResp != nil {
-		log.Println(errResp)
+		log.Warn().Msgf("%v", errResp)
 		return createdBooking, errResp
 	}
 
@@ -39,9 +40,9 @@ func (r *Rest) BookingCreate(e entity.ClientCreds) (entity.Booking, error) {
 	var createdBooking entity.Booking
 
 	response, errResp := executeRequest(http.MethodPost, client.ApiGatewayHost+client.BookingCreateURL, e, r)
-	log.Printf("got response after request %v, %v", response, errResp)
+	log.Warn().Msgf("got response after request %v, %v", response, errResp)
 	if errResp != nil {
-		log.Println(errResp)
+		log.Warn().Msgf("%v", errResp)
 		return createdBooking, errResp
 	}
 
@@ -49,7 +50,7 @@ func (r *Rest) BookingCreate(e entity.ClientCreds) (entity.Booking, error) {
 
 	createdBooking, unmarshalErr := unmarshalResponse[entity.Booking](response)
 	if unmarshalErr != nil {
-		log.Println(unmarshalErr)
+		log.Warn().Msgf("%v", unmarshalErr)
 		return createdBooking, unmarshalErr
 	}
 
@@ -67,9 +68,9 @@ func (r *Rest) BookingCreate(e entity.ClientCreds) (entity.Booking, error) {
 func (r *Rest) BookingCancel(b entity.Booking) error {
 
 	response, errResp := executeRequest(http.MethodPost, client.ApiGatewayHost+client.BookingCancelURL, b, r)
-	log.Printf("got response after request %v, %v", response, errResp)
+	log.Warn().Msgf("got response after request %v, %v", response, errResp)
 	if errResp != nil {
-		log.Println(errResp)
+		log.Warn().Msgf("%v", errResp)
 		return errResp
 	}
 
@@ -89,9 +90,9 @@ func (r *Rest) BookingCancel(b entity.Booking) error {
 func (r *Rest) BookingChoose(b entity.Booking) error {
 
 	response, errResp := executeRequest(http.MethodPost, client.ApiGatewayHost+client.BookingChooseURL, b, r)
-	log.Printf("got response after request %v, %v", response, errResp)
+	log.Warn().Msgf("got response after request %v, %v", response, errResp)
 	if errResp != nil {
-		log.Println(errResp)
+		log.Warn().Msgf("%v", errResp)
 		return errResp
 	}
 
@@ -110,9 +111,9 @@ func (r *Rest) BookingChoose(b entity.Booking) error {
 // Post-cond: request was executed. If successfull returns nil otherwise error
 func (r *Rest) BookingFinish(b entity.Booking) error {
 	response, errResp := executeRequest(http.MethodPost, client.ApiGatewayHost+client.BookingFinishURL, b, r)
-	log.Printf("got response after request %v, %v", response, errResp)
+	log.Warn().Msgf("got response after request %v, %v", response, errResp)
 	if errResp != nil {
-		log.Println(errResp)
+		log.Warn().Msgf("%v", errResp)
 		return errResp
 	}
 

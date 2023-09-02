@@ -7,8 +7,9 @@ import (
 	"client-service/internal/server/api"
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 )
 
 // Create is API for creating new  booking that marshaled from request body for user
@@ -23,14 +24,14 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	created, bookingErr := kernel.CreateBooking(c, rest.New(token))
 
 	if bookingErr != nil {
-		log.Println(bookingErr)
+		log.Warn().Msgf("%v", bookingErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	responseBody, marshalErr := json.Marshal(created)
 	if marshalErr != nil {
-		log.Println(marshalErr)
+		log.Warn().Msgf("%v", marshalErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -52,7 +53,7 @@ func Choose(w http.ResponseWriter, r *http.Request) {
 	bookingErr := kernel.ChooseCarBooking(u, rest.New(token))
 
 	if bookingErr != nil {
-		log.Println(bookingErr)
+		log.Warn().Msgf("%v", bookingErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -72,7 +73,7 @@ func Cancel(w http.ResponseWriter, r *http.Request) {
 	bookingErr := kernel.CancelBooking(u, rest.New(token))
 
 	if bookingErr != nil {
-		log.Println(bookingErr)
+		log.Warn().Msgf("%v", bookingErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -93,7 +94,7 @@ func Approve(w http.ResponseWriter, r *http.Request) {
 	_, bookingErr := kernel.ApproveBooking(u, rest.New(token))
 
 	if bookingErr != nil {
-		log.Println(bookingErr)
+		log.Warn().Msgf("%v", bookingErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -114,7 +115,7 @@ func Finish(w http.ResponseWriter, r *http.Request) {
 	bookingErr := kernel.FinishBooking(u, rest.New(token))
 
 	if bookingErr != nil {
-		log.Println(bookingErr)
+		log.Warn().Msgf("%v", bookingErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -126,16 +127,16 @@ func readRequestBody[T any](r *http.Request) (T, error) {
 	var res T
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		return res, err
 	}
-	log.Printf("reading request %s", body)
+	log.Warn().Msgf("reading request %s", body)
 	unmarshalErr := json.Unmarshal(body, &res)
 	if unmarshalErr != nil {
-		log.Println(unmarshalErr)
+		log.Warn().Msgf("%v", unmarshalErr)
 		return res, unmarshalErr
 	}
 
-	log.Printf("reading request unmarshaled into %v", res)
+	log.Warn().Msgf("reading request unmarshaled into %v", res)
 	return res, nil
 }
