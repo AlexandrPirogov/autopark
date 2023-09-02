@@ -1,21 +1,7 @@
 services:
-   manager-service-db:
-    image: postgres:alpine
-    restart: always
-    networks:
-      - autopark-backend
-    environment:      
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-    ports:
-      - 10010:5432
-    volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-
-   manager-service:
+   service-manager:
      image: golang:1.21
-     container_name: manager-service
+     container_name: service-manager
      networks:
        - autopark-backend
      ports:

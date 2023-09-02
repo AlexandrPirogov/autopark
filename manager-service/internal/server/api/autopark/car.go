@@ -3,18 +3,19 @@ package autopark
 import (
 	"encoding/json"
 	"io"
-	"log"
 	"manager-service/internal/client/rest"
 	"manager-service/internal/entity/autopark"
 	"manager-service/internal/kernel"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 )
 
 // CarList is API for listing brands in autopark-service
 func CarList(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -28,14 +29,14 @@ func CarList(w http.ResponseWriter, r *http.Request) {
 
 	response, requestErr := kernel.ReadCars(pattern, rest.New())
 	if requestErr != nil {
-		log.Println(requestErr)
+		log.Warn().Msgf("%v", requestErr)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	responseBody, marshalErr := json.Marshal(response)
 	if marshalErr != nil {
-		log.Println(marshalErr)
+		log.Warn().Msgf("%v", marshalErr)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

@@ -6,10 +6,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"manager-service/internal/client"
 	"manager-service/internal/entity/autopark"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 )
 
 // New returns pointer to new instance of Rest
@@ -34,13 +35,13 @@ type Rest struct {
 func (r *Rest) StoreBrand(b autopark.Brand) error {
 	payload, err := json.Marshal(b)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		return err
 	}
 
 	response, errResp := r.executeRequest(http.MethodPost, client.ApiGatewayHost+client.BrandRegisterURL, payload)
 	if errResp != nil {
-		log.Println(errResp)
+		log.Warn().Msgf("%v", errResp)
 		return errResp
 	}
 
@@ -61,13 +62,13 @@ func (r *Rest) StoreBrand(b autopark.Brand) error {
 func (r *Rest) ReadBrands(pattern autopark.Brand) ([]autopark.Brand, error) {
 	payload, err := json.Marshal(pattern)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		return nil, err
 	}
 
 	response, errResp := r.executeRequest(http.MethodPost, client.ApiGatewayHost+client.BrandListrURL, payload)
 	if errResp != nil {
-		log.Println(errResp)
+		log.Warn().Msgf("%v", errResp)
 		return nil, errResp
 	}
 
@@ -75,7 +76,7 @@ func (r *Rest) ReadBrands(pattern autopark.Brand) ([]autopark.Brand, error) {
 
 	brands, unmarshalErr := unmarshalResponse[[]autopark.Brand](response)
 	if unmarshalErr != nil {
-		log.Println(unmarshalErr)
+		log.Warn().Msgf("%v", unmarshalErr)
 		return nil, unmarshalErr
 	}
 
@@ -94,13 +95,13 @@ func (r *Rest) ReadBrands(pattern autopark.Brand) ([]autopark.Brand, error) {
 func (r *Rest) StoreCar(c autopark.Car) error {
 	payload, err := json.Marshal(c)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		return err
 	}
 
 	response, errResp := r.executeRequest(http.MethodPost, client.ApiGatewayHost+client.CarRegisterURL, payload)
 	if errResp != nil {
-		log.Println(errResp)
+		log.Warn().Msgf("%v", errResp)
 		return errResp
 	}
 
@@ -120,13 +121,13 @@ func (r *Rest) StoreCar(c autopark.Car) error {
 func (r *Rest) DeleteCars(pattern autopark.Car) error {
 	payload, err := json.Marshal(pattern)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		return err
 	}
 
 	response, errResp := r.executeRequest(http.MethodPost, client.ApiGatewayHost+client.CarDeleteURL, payload)
 	if errResp != nil {
-		log.Println(errResp)
+		log.Warn().Msgf("%v", errResp)
 		return errResp
 	}
 
@@ -147,13 +148,13 @@ func (r *Rest) DeleteCars(pattern autopark.Car) error {
 func (r *Rest) ReadCars(pattern autopark.Car) ([]autopark.Car, error) {
 	payload, err := json.Marshal(pattern)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		return nil, err
 	}
 
 	response, errResp := r.executeRequest(http.MethodPost, client.ApiGatewayHost+client.CarListURL, payload)
 	if errResp != nil {
-		log.Println(errResp)
+		log.Warn().Msgf("%v", errResp)
 		return nil, errResp
 	}
 
@@ -161,7 +162,7 @@ func (r *Rest) ReadCars(pattern autopark.Car) ([]autopark.Car, error) {
 
 	cars, unmarshalErr := unmarshalResponse[[]autopark.Car](response)
 	if unmarshalErr != nil {
-		log.Println(unmarshalErr)
+		log.Warn().Msgf("%v", unmarshalErr)
 		return nil, unmarshalErr
 	}
 
@@ -181,13 +182,13 @@ func (r *Rest) executeRequest(method string, url string, body []byte) (*http.Res
 	reader := bytes.NewReader(body)
 	request, errReq := http.NewRequest(http.MethodPost, url, reader)
 	if errReq != nil {
-		log.Println(errReq)
+		log.Warn().Msgf("%v", errReq)
 		return nil, errReq
 	}
 
 	response, errResp := r.client.Do(request)
 	if errResp != nil {
-		log.Println(errResp)
+		log.Warn().Msgf("%v", errResp)
 		return nil, errResp
 	}
 	return response, nil
@@ -197,13 +198,13 @@ func unmarshalResponse[T any](response *http.Response) (T, error) {
 	var res T
 	responseBody, readResponseErr := io.ReadAll(response.Body)
 	if readResponseErr != nil {
-		log.Println(readResponseErr)
+		log.Warn().Msgf("%v", readResponseErr)
 		return res, readResponseErr
 	}
 
 	unmarshalErr := json.Unmarshal(responseBody, &res)
 	if unmarshalErr != nil {
-		log.Println(unmarshalErr)
+		log.Warn().Msgf("%v", unmarshalErr)
 		return res, unmarshalErr
 	}
 

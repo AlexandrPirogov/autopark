@@ -2,7 +2,8 @@ package autopark
 
 import (
 	"encoding/json"
-	"log"
+
+	"github.com/rs/zerolog/log"
 )
 
 func unmarshal[T any](body []byte) (T, error) {
