@@ -22,8 +22,6 @@ services:
       - /bin/sh
       - -c
       - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
-    ports:
-      - "6380:6379"
     env_file:
       - .env
    service-booking:
@@ -31,8 +29,6 @@ services:
     container_name: service-booking
     networks:
       - autopark-backend
-    ports:
-      - 15600:8080
     volumes:
       - ./:/autopark
     working_dir: /autopark

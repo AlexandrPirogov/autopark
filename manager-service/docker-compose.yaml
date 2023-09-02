@@ -4,8 +4,6 @@ services:
      container_name: service-manager
      networks:
        - autopark-backend
-     ports:
-       - 15001:8090
      volumes:
        - ./:/autopark
      working_dir: /autopark

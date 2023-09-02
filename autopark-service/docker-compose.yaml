@@ -19,8 +19,6 @@ services:
     container_name: service-autopark
     networks:
       - autopark-backend
-    ports:
-      - 15000:8081
     volumes:
       - ./:/service-autopark
     working_dir: /service-autopark

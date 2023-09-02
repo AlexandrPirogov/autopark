@@ -4,8 +4,6 @@ services:
     container_name: service-client
     networks:
       - autopark-backend
-    ports:
-      - 15080:8080
     volumes:
       - ./:/service-client
     working_dir: /service-client
