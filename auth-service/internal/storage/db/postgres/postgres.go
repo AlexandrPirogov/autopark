@@ -2,16 +2,21 @@
 package postgres
 
 import (
+	"auth-service/internal/config"
 	"context"
-	"log"
 	"sync"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/rs/zerolog/log"
 )
 
 // Instance of singleton
 var singletonConn *pgconn = nil
 var initOnce sync.Once
+
+func init() {
+	GetInstance()
+}
 
 func GetInstance() *pgconn {
 	initOnce.Do(func() {
@@ -33,7 +38,7 @@ type pgconn struct {
 func (pg *pgconn) LookForAdmin(login, pwd string) error {
 	var id int
 	err := pg.conn.QueryRow(context.Background(), QueryLookForAdmin, login, pwd).Scan(&id)
-	log.Println(err)
+	log.Warn().Msgf("%v", err)
 	return err
 }
 
@@ -45,7 +50,7 @@ func (pg *pgconn) LookForAdmin(login, pwd string) error {
 // Otherwise returns error
 func (pg *pgconn) RegisterManager(login, pwd string) (int, error) {
 	_, err := pg.conn.Exec(context.Background(), QueryInsertNewManager, login, pwd)
-	log.Println(err)
+	log.Warn().Msgf("%v", err)
 	return pg.LookForManager(login, pwd)
 }
 
@@ -58,7 +63,7 @@ func (pg *pgconn) RegisterManager(login, pwd string) (int, error) {
 func (pg *pgconn) LookForManager(login, pwd string) (int, error) {
 	var id int
 	err := pg.conn.QueryRow(context.Background(), QueryLookForManager, login, pwd).Scan(&id)
-	log.Println(err)
+	log.Warn().Msgf("%v", err)
 	return id, err
 }
 
@@ -70,7 +75,7 @@ func (pg *pgconn) LookForManager(login, pwd string) (int, error) {
 // Otherwise returns error
 func (pg *pgconn) RegisterClient(login, pwd string) (int, error) {
 	_, err := pg.conn.Exec(context.Background(), QueryInsertNewClient, login, pwd)
-	log.Println(err)
+	log.Warn().Msgf("%v", err)
 	return pg.LookForClient(login, pwd)
 }
 
@@ -83,7 +88,7 @@ func (pg *pgconn) RegisterClient(login, pwd string) (int, error) {
 func (pg *pgconn) LookForClient(login, pwd string) (int, error) {
 	var id int
 	err := pg.conn.QueryRow(context.Background(), QueryLookForClient, login, pwd).Scan(&id)
-	log.Println(err)
+	log.Warn().Msgf("%v", err)
 	return id, err
 }
 
@@ -97,15 +102,18 @@ func new() *pgconn {
 
 // tryConnect checks connectnions
 func tryConnect() *pgxpool.Pool {
-	URL := "postgresql://postgres:postgres@auth-postgres:5432/postgres"
+	URL := config.PostgresURL()
 	conn, err := pgxpool.New(context.Background(), URL)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Msgf("%v", err)
 	}
 
+	log.Warn().Msgf("pinging db %s", URL)
 	ping := conn.Ping(context.Background())
 	if ping != nil {
-		log.Fatalf("error while pinging %v", ping)
+		log.Fatal().Msgf("error while pinging %v", ping)
 	}
+	log.Warn().Msg("connected to postgres db successfully...")
+
 	return conn
 }

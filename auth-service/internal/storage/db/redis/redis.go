@@ -1,10 +1,12 @@
 package redis
 
 import (
+	"auth-service/internal/config"
 	"context"
-	"log"
 	"sync"
 	"time"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -26,14 +28,14 @@ func GetInstance() *redisConn {
 
 func new() *redisConn {
 	conn := redis.NewClient(&redis.Options{
-		Addr:     "auth-redis:6379",
-		Password: "secret", // no password set
-		DB:       0,        // use default DB
+		Addr:     "redis-auth:6379",
+		Password: config.RedisPwd(), // no password set
+		DB:       0,                 // use default DB
 	})
 
 	_, err := conn.Ping(context.Background()).Result()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Msgf("%v", err)
 	}
 
 	return &redisConn{
@@ -45,7 +47,7 @@ func new() *redisConn {
 func (r *redisConn) SetRefreshToken(val string) error {
 	err := r.conn.Set(context.Background(), val, "true", time.Hour*24).Err()
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		return err
 	}
 

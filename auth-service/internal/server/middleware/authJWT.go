@@ -2,9 +2,10 @@ package middleware
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
+
+	"github.com/rs/zerolog/log"
 
 	auth "auth-service/internal/auth/jwt"
 
@@ -15,7 +16,7 @@ import (
 func AuthJWT(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if err := verifyRefreshToken(r); err != nil {
-			log.Println("verify err ", err)
+			log.Warn().Msgf("verify err %v", err)
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
@@ -27,21 +28,21 @@ func verifyRefreshToken(r *http.Request) error {
 	var cookie *http.Cookie
 	cookie, err := r.Cookie(auth.RerfeshTokenCookieField)
 	if cookie == nil || err != nil {
-		log.Println(r.Header[auth.RerfeshTokenCookieField])
+		log.Warn().Msgf("%v", r.Header[auth.RerfeshTokenCookieField])
 		return fmt.Errorf("error while reading token %v", err)
 	}
 	tokenVal := cookie.Value[strings.Index(cookie.Value, "=")+1:]
 	token, err := jwt.Parse(tokenVal, func(t *jwt.Token) (interface{}, error) {
 		_, ok := t.Method.(*jwt.SigningMethodHMAC)
 		if !ok {
-			log.Println("not ok")
+			log.Warn().Msg("not ok")
 		}
 		return []byte(auth.JWTSecret), nil
 
 	})
 
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		return err
 	}
 

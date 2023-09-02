@@ -1,8 +1,9 @@
 package jwt
 
 import (
-	"log"
 	"time"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/golang-jwt/jwt/v5"
 )

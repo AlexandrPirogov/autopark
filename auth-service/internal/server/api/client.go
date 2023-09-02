@@ -6,8 +6,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 )
 
 // LoginClient authenticate Client. If creds are correct then generate
@@ -26,12 +27,14 @@ func LoginClient(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Debug().Msgf("verifying creds for %v", c)
 	client, err := auth.VerifyClientCredentionals(c.Login, c.Pwd, db.GetCurrentCredsStorerInstance())
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
+	log.Debug().Msg("storing refresh toekn")
 	err = auth.StoreRefreshToken(client.RefreshToken(), db.GetCurrentJWTStorerInstance())
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -40,10 +43,11 @@ func LoginClient(w http.ResponseWriter, r *http.Request) {
 
 	cookie := setRefreshCookieToken(client.RefreshToken())
 	http.SetCookie(w, cookie)
+	log.Debug().Msgf("refresh token %v", cookie)
 
 	responseBody, marshalErr := json.Marshal(client)
 	if marshalErr != nil {
-		log.Println(marshalErr)
+		log.Warn().Msgf("%v", marshalErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -69,6 +73,7 @@ func RegisterClient(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Debug().Msgf("registering creds %v", c)
 	id, registerErr := auth.RegisterClient(c.Login, c.Pwd, db.GetCurrentCredsStorerInstance())
 	if registerErr != nil {
 		log.Printf("auth register err %v", registerErr)
@@ -76,6 +81,7 @@ func RegisterClient(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Debug().Msgf("registered %v successfully", c)
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(fmt.Sprintf("{\"id\":%d}", id)))
 }

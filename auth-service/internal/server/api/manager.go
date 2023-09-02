@@ -6,8 +6,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 )
 
 // LoginManager authenticate manager. If creds are correct then generate
@@ -60,6 +61,7 @@ func RegisterManager(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Debug().Msgf("registering manager %v", c)
 	id, registerErr := auth.RegisterManager(c.Login, c.Pwd, db.GetCurrentCredsStorerInstance())
 	if registerErr != nil {
 		log.Printf("auth register err %v", registerErr)
@@ -67,6 +69,7 @@ func RegisterManager(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Debug().Msgf("registeried manager %v succcessfully", c)
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(fmt.Sprintf("{\"id\":%d}", id)))
 }
