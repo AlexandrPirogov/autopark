@@ -6,8 +6,9 @@ import (
 	"encoding/json"
 	"enterprise-service/internal/client"
 	"io"
-	"log"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 )
 
 type rest struct {
@@ -38,20 +39,20 @@ func (r *rest) RegisterManager(m client.Manager) (client.Manager, error) {
 	var res client.Manager
 	body, marshalErr := json.Marshal(m)
 	if marshalErr != nil {
-		log.Println(marshalErr)
+		log.Warn().Msgf("%v", marshalErr)
 		return res, marshalErr
 	}
 
 	response, respErr := r.executeRequest(http.MethodPost, client.ApiGatewayHost+client.RegisterManagerURL, body)
 	if respErr != nil {
-		log.Println(respErr)
+		log.Warn().Msgf("%v", respErr)
 		return res, respErr
 	}
 	defer response.Body.Close()
 
 	res, unmarshalErr := unmarshalResponse[client.Manager](response)
 	if unmarshalErr != nil {
-		log.Println(unmarshalErr)
+		log.Warn().Msgf("%v", unmarshalErr)
 		return res, unmarshalErr
 	}
 
@@ -73,13 +74,13 @@ func (r *rest) executeRequest(method string, url string, body []byte) (*http.Res
 	}
 	request.AddCookie(&c)
 	if reqErr != nil {
-		log.Println(reqErr)
+		log.Warn().Msgf("%v", reqErr)
 		return nil, reqErr
 	}
 
 	response, errResp := r.client.Do(request)
 	if errResp != nil {
-		log.Println(errResp)
+		log.Warn().Msgf("%v", errResp)
 		return nil, errResp
 	}
 	return response, nil
@@ -89,13 +90,13 @@ func unmarshalResponse[T any](response *http.Response) (T, error) {
 	var res T
 	responseBody, readResponseErr := io.ReadAll(response.Body)
 	if readResponseErr != nil {
-		log.Println(readResponseErr)
+		log.Warn().Msgf("%v", readResponseErr)
 		return res, readResponseErr
 	}
 
 	unmarshalErr := json.Unmarshal(responseBody, &res)
 	if unmarshalErr != nil {
-		log.Println(unmarshalErr)
+		log.Warn().Msgf("%v", unmarshalErr)
 		return res, unmarshalErr
 	}
 

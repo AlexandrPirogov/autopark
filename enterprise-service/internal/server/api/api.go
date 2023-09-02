@@ -10,10 +10,11 @@ import (
 	"enterprise-service/internal/std"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -64,21 +65,21 @@ func ReadEnerprises(w http.ResponseWriter, r *http.Request) {
 	var e enterprise.Enterprise
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	marhsalErr := json.Unmarshal(body, &e)
 	if marhsalErr != nil {
-		log.Println(marhsalErr)
+		log.Warn().Msgf("%v", marhsalErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	list, storeErr := kernel.Read(e, db.GetConnInstance())
 	if storeErr != nil {
-		log.Println(storeErr)
+		log.Warn().Msgf("%v", storeErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -100,21 +101,21 @@ func ReadEnerprise(w http.ResponseWriter, r *http.Request) {
 	idstr := chi.URLParam(r, "id")
 	id, convErr := strconv.Atoi(idstr)
 	if convErr != nil {
-		log.Println(convErr)
+		log.Warn().Msgf("%v", convErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	res, readErr := kernel.ReadByID(id, db.GetConnInstance())
 	if readErr != nil {
-		log.Println(readErr)
+		log.Warn().Msgf("%v", readErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	responseBody, marshalErr := json.Marshal(res)
 	if marshalErr != nil {
-		log.Println(marshalErr)
+		log.Warn().Msgf("%v", marshalErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -128,7 +129,7 @@ func RegisterManager(w http.ResponseWriter, r *http.Request) {
 	idstr := chi.URLParam(r, "id")
 	id, convErr := strconv.Atoi(idstr)
 	if convErr != nil {
-		log.Println(convErr)
+		log.Warn().Msgf("%v", convErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -136,14 +137,14 @@ func RegisterManager(w http.ResponseWriter, r *http.Request) {
 	var m client.Manager
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	marhsalErr := json.Unmarshal(body, &m)
 	if marhsalErr != nil {
-		log.Println(marhsalErr)
+		log.Warn().Msgf("%v", marhsalErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -151,7 +152,7 @@ func RegisterManager(w http.ResponseWriter, r *http.Request) {
 	token, _ := retrieveRefreshToken(r)
 	res, err := kernel.RegisterManager(m, rest.New(token))
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -159,7 +160,7 @@ func RegisterManager(w http.ResponseWriter, r *http.Request) {
 	res.EnterpriseID = id
 	assignErr := kernel.AssignManager(res, db.GetConnInstance())
 	if assignErr != nil {
-		log.Println(assignErr)
+		log.Warn().Msgf("%v", assignErr)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -167,7 +168,7 @@ func RegisterManager(w http.ResponseWriter, r *http.Request) {
 	log.Printf("register response %v", res)
 	responseBody, marshalErr := json.Marshal(res)
 	if marshalErr != nil {
-		log.Println(marshalErr)
+		log.Warn().Msgf("%v", marshalErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -181,7 +182,7 @@ func retrieveRefreshToken(r *http.Request) (string, error) {
 	cookie, err := r.Cookie(client.RerfeshTokenCookieField)
 
 	if cookie == nil || err != nil {
-		log.Println(r.Header[client.RerfeshTokenCookieField])
+		log.Warn().Msgf("%v", r.Header[client.RerfeshTokenCookieField])
 		return "", fmt.Errorf("error while reading token %v", err)
 	}
 

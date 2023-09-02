@@ -7,8 +7,9 @@ import (
 	"enterprise-service/internal/enterprise"
 	"enterprise-service/internal/std"
 	"enterprise-service/internal/std/list"
-	"log"
 	"sync"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -66,7 +67,7 @@ func (pg *pgconn) Delete(e enterprise.Enterprise) error {
 func (pg *pgconn) Read(e enterprise.Enterprise) (std.Linked[enterprise.Enterprise], error) {
 	rows, err := pg.conn.Query(context.Background(), QueryReadEnterprises)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		return nil, err
 	}
 
@@ -75,7 +76,7 @@ func (pg *pgconn) Read(e enterprise.Enterprise) (std.Linked[enterprise.Enterpris
 		var e enterprise.Enterprise
 		scanErr := rows.Scan(&e.Title)
 		if scanErr != nil {
-			log.Println(err)
+			log.Warn().Msgf("%v", err)
 			continue
 		}
 		res.PushBack(e)
@@ -121,12 +122,12 @@ func tryConnect() *pgxpool.Pool {
 	URL := "postgresql://postgres:postgres@enterprise-db:5432/postgres"
 	conn, err := pgxpool.New(context.Background(), URL)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Msgf("%v", err)
 	}
 
 	ping := conn.Ping(context.Background())
 	if ping != nil {
-		log.Fatalf("error while pinging %v", ping)
+		log.Fatal().Msgf("error while pinging %v", ping)
 	}
 	return conn
 }
