@@ -1,8 +1,8 @@
 package server
 
 import (
-	"auth-service/server/api"
-	m "auth-service/server/middleware"
+	"auth-service/internal/server/api"
+	m "auth-service/internal/server/middleware"
 	"context"
 	"net"
 	"net/http"
