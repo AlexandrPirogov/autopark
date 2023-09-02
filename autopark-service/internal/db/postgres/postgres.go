@@ -2,9 +2,11 @@
 package postgres
 
 import (
+	"autopark-service/internal/config"
 	"context"
-	"log"
 	"sync"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -37,15 +39,15 @@ func new() *pgconn {
 // tryConnect trying to ping to verify that database is avaible
 // and given URL is correct
 func tryConnect() *pgxpool.Pool {
-	URL := "postgresql://postgres:postgres@autoparkdb:5432/postgres"
+	URL := config.PostgresURL()
 	conn, err := pgxpool.New(context.Background(), URL)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().Msgf("%v", err)
 	}
 
 	ping := conn.Ping(context.Background())
 	if ping != nil {
-		log.Fatalf("error while pinging %v", ping)
+		log.Fatal().Msgf("error while pinging %v", ping)
 	}
 	return conn
 }

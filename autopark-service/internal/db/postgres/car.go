@@ -6,7 +6,8 @@ import (
 	"autopark-service/internal/std"
 	"autopark-service/internal/std/list"
 	"context"
-	"log"
+
+	"github.com/rs/zerolog/log"
 )
 
 // Reads ALL cars from db
@@ -73,7 +74,7 @@ func (pg *pgconn) DeleteCars(pattern car.Car) error {
 func (pg *pgconn) ReadCars(c car.Car) (std.Linked[car.Car], error) {
 	rows, err := pg.conn.Query(context.Background(), QueryReadCars)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		return nil, err
 	}
 
@@ -82,7 +83,7 @@ func (pg *pgconn) ReadCars(c car.Car) (std.Linked[car.Car], error) {
 		var c car.Car
 		scanErr := rows.Scan(&c.Brand, &c.Type, &c.UID)
 		if scanErr != nil {
-			log.Println(err)
+			log.Warn().Msgf("%v", err)
 			continue
 		}
 		res.PushBack(c)
@@ -94,7 +95,7 @@ func (pg *pgconn) ReadCars(c car.Car) (std.Linked[car.Car], error) {
 func (pg *pgconn) ReadSetCars() (std.Linked[car.Car], error) {
 	rows, err := pg.conn.Query(context.Background(), QueryReadSetCars)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		return nil, err
 	}
 
@@ -103,7 +104,7 @@ func (pg *pgconn) ReadSetCars() (std.Linked[car.Car], error) {
 		var c car.Car
 		scanErr := rows.Scan(&c.UID, &c.Brand, &c.Type, &c.Status)
 		if scanErr != nil {
-			log.Println(scanErr)
+			log.Warn().Msgf("%v", scanErr)
 			continue
 		}
 		res.PushBack(c)

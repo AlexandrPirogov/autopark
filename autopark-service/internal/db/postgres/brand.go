@@ -6,7 +6,8 @@ import (
 	"autopark-service/internal/std"
 	"autopark-service/internal/std/list"
 	"context"
-	"log"
+
+	"github.com/rs/zerolog/log"
 )
 
 // QueryReadBrands reads all brands from DB
@@ -28,7 +29,7 @@ const QueryDeleteBrand = `delete from Brands where brand = $1`
 func (pg *pgconn) ReadBrands(pattern car.Brand) (std.Linked[car.Brand], error) {
 	rows, err := pg.conn.Query(context.Background(), QueryReadBrands)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		return nil, err
 	}
 
@@ -37,7 +38,7 @@ func (pg *pgconn) ReadBrands(pattern car.Brand) (std.Linked[car.Brand], error) {
 		var b car.Brand
 		scanErr := rows.Scan(&b.Brand)
 		if scanErr != nil {
-			log.Println(err)
+			log.Warn().Msgf("%v", err)
 			continue
 		}
 		res.PushBack(b)

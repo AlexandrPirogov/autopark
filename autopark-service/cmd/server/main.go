@@ -3,11 +3,12 @@ package main
 import (
 	"autopark-service/internal/server"
 	"context"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/rs/zerolog/log"
 )
 
 func main() {
@@ -15,13 +16,13 @@ func main() {
 	s := server.New(ctx)
 	go func() {
 		if err := s.ListenAndServe(); err != nil {
-			log.Fatal(err)
+			log.Fatal().Msgf("%v", err)
 		}
 	}()
 
 	cancelChan := make(chan os.Signal, 1)
 	signal.Notify(cancelChan, syscall.SIGTERM, syscall.SIGINT, syscall.SIGHUP, syscall.SIGQUIT)
-	log.Println("Running auto-park-service")
+	log.Warn().Msg("Running auto-park-service")
 	sig := <-cancelChan
 	log.Printf("Got signal %v\n", sig)
 

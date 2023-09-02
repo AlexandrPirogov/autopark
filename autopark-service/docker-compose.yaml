@@ -1,29 +1,29 @@
 services:
-   autopark-db:
+   postgres-autopark:
     image: postgres:alpine
     restart: always
-    container_name: autoparkdb
+    container_name: postgres-autopark
     networks:
       - autopark-backend
     environment:      
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-    ports:
-      - 10001:5432
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
-   autopark-service:
+   service-autopark:
     image: golang:1.21
-    container_name: autopark-service
+    depends_on:
+      - postgres-autopark
+    container_name: service-autopark
     networks:
       - autopark-backend
     ports:
       - 15000:8081
     volumes:
-      - ./:/autopark
-    working_dir: /autopark
+      - ./:/service-autopark
+    working_dir: /service-autopark
     command: "go run cmd/server/main.go"
 
 networks:

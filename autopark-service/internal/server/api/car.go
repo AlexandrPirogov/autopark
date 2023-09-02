@@ -8,8 +8,9 @@ import (
 	"autopark-service/internal/std"
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -88,7 +89,7 @@ func ReadSetCars(w http.ResponseWriter, r *http.Request) {
 func DeleteCar(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -96,7 +97,7 @@ func DeleteCar(w http.ResponseWriter, r *http.Request) {
 	var b car.Car
 	marshalErr := json.Unmarshal(body, &b)
 	if marshalErr != nil {
-		log.Println(marshalErr)
+		log.Warn().Msgf("%v", marshalErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -115,7 +116,7 @@ func SetCar(w http.ResponseWriter, r *http.Request) {
 	c := car.Car{UID: uid}
 	err := kernel.SetCar(c, db.GetConnInstance())
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -127,7 +128,7 @@ func UnsetCar(w http.ResponseWriter, r *http.Request) {
 	c := car.Car{UID: uid}
 	err := kernel.UnsetCar(c, db.GetConnInstance())
 	if err != nil {
-		log.Println(err)
+		log.Warn().Msgf("%v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
