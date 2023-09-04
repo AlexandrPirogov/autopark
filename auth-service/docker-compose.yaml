@@ -1,0 +1,49 @@
+services:
+   postgres-auth:
+    image: postgres:alpine
+    container_name: postgres-auth
+    networks:
+      - autopark-backend
+    restart: always
+    environment:      
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+   #redis
+   redis-auth:
+    image: redis:alpine
+    restart: always
+    container_name: redis-auth
+    networks:
+      - autopark-backend
+    command:
+      - /bin/sh
+      - -c
+      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+    ports:
+      - "6379:6379"
+    env_file:
+      - .env
+
+   #auth service
+   service-auth:
+    image: golang:1.21
+    container_name: service-auth
+    depends_on:
+      - postgres-auth
+      - redis-auth
+    networks:
+      - autopark-backend
+    ports:
+      - 15050:8080
+    volumes:
+      - ./:/service-auth
+    working_dir: /service-auth
+    command: "go run cmd/server/main.go"
+
+networks:
+  autopark-backend:
+    driver: bridge
+    name: autopark-backend

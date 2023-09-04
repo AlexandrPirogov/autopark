@@ -1,0 +1,15 @@
+services:
+   service-client:
+    image: golang:1.21
+    container_name: service-client
+    networks:
+      - autopark-backend
+    volumes:
+      - ./:/service-client
+    working_dir: /service-client
+    command: "go run cmd/server/main.go"
+
+networks:
+  autopark-backend:
+    driver: bridge
+    name: autopark-backend
