@@ -1,0 +1,15 @@
+services:
+    service-enterprise-front:
+     image: golang:1.21
+     container_name: service-enterprise-front
+     networks:
+       - autopark-backend
+     volumes:
+       - ./:/service-enterprise-front
+     working_dir: /service-enterprise-front
+     command: "go run cmd/main.go"
+
+networks:
+  autopark-backend:
+    driver: bridge
+    name: autopark-backend

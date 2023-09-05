@@ -1,0 +1,80 @@
+{{define "index"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/enterprise/public/style/general.css">
+    <link rel="stylesheet" href="/enterprise/public/style/form.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="/enterprise/">Main</a>
+            <a href="/enterprise/enterprises">Enterprises</a>
+        </nav>
+    </header>
+    <div id="content">
+        <div id="inner-left">
+            <div id="container">
+                {{range .Managers}}
+                <div id="element">
+                    <div id="left-side">
+                        <img src="https://cdn-icons-png.flaticon.com/512/4205/4205906.png" alt="">
+                    </div>
+                    <div id="right-side">
+                        <h1>{{ .Name}}</h1>
+                        <h1>{{ .Surname}}</h1>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </div>
+        <div id="inner-right">
+            <h1>Register new manager</h1>
+            <div id="formcontainer">
+                <div id="form">
+                    <div>
+                        <label for="name">Name:</label>
+                        <input type="text" id="manager-name" name="name">
+                    </div>
+                    <div>
+                        <label for="surname">Surname:</label>
+                        <input type="text" id="manager-surname" name="surname">
+                    </div>
+                    <div>
+                        <label for="login">Login:</label>
+                        <input type="text" id="manager-login" name="login">
+                    </div>
+                    <div>
+                        <label for="password">Password:</label>
+                        <input type="text" id="manager-password" name="password">
+                    </div>
+                    <button id="submit-manager-register">Register</button>
+
+                    <figure aria-hidden="true">
+                        <div class="person-body"></div>
+                        <div class="neck skin"></div>
+                        <div class="head skin">
+                            <div class="eyes"></div>
+                            <div class="mouth"></div>
+                        </div>
+                        <div class="hair"></div>
+                        <div class="ears"></div>
+                        <div class="shirt-1"></div>
+                        <div class="shirt-2"></div>
+                    </figure>
+                    </form>
+                </div>
+            </div>
+        </div>
+</body>
+<script> var title = "{{ .Title}}"</script>
+<script type="module" src="/enterprise/public/script/http/http.js"></script>
+<script type="module" src="/enterprise/public/script/managers/script.js"></script>
+</html>
+
+{{end}}

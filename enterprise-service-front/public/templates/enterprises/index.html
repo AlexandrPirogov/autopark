@@ -1,0 +1,33 @@
+{{define "index"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/enterprise/public/style/general.css">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <nav>
+           <a href="/enterprise/">Main</a>
+        </nav>
+    </header>
+    <div id="container">
+    
+        {{ range .Enterprises}}
+        <div id="element">
+            <div id="left-side">
+                <a href="/enterprise/enterprises/{{ .Title}}"><img src="https://cdn-icons-png.flaticon.com/512/3328/3328224.png" alt=""></a>
+            </div>
+            <div id="right-side">
+                <h1>{{ .Title}}</h1>
+               <h3>created_at</h3>
+            </div>
+        </div>
+        {{ end}}
+    </div>
+</body>
+</html>
+
+{{end}}
