@@ -1,0 +1,64 @@
+{{define "index"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/manager/public/style/general.css">
+    <link rel="stylesheet" href="/manager/public/style/form.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Audiowide">
+    <title>Document</title>
+</head>
+
+<body>
+    <header>
+    </header>
+    <div id="content">
+        <div id="inner-left">
+            <div id="container">
+                {{range .Cars}}
+                <div id="element">
+                    <div id="left-side">
+                        <img src="https://static.vecteezy.com/system/resources/thumbnails/003/694/243/small/car-icon-in-flat-style-simple-traffic-icon-free-vector.jpg"
+                            alt="">
+                    </div>
+                    <div id="right-side">
+                        <h1>{{ .UID}}</h1>
+                        <h1>{{ .Type}}</h1>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </div>
+        <div id="inner-right">
+            <h1>Register new manager</h1>
+            <div id="formcontainer">
+                <div id="form">
+                    <div class="formblock">
+                        <label for="uid">uid:</label>
+                        <input type="text" id="car-uid" name="uid" maxlength="8">
+                    </div>
+                    <div class="formblock">
+                        <label for="type">Type:</label>
+                        <select name="type" id="">
+                            <option value="sedan">sedan</option>
+                            <option value="sport">sport</option>
+                            <option value="hatchback">hatchback</option>
+                        </select>
+                    </div>
+                    <div class="formblock">
+                        <button id="submit-manager-register">Add</button>
+                    </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>
+
+{{end}}

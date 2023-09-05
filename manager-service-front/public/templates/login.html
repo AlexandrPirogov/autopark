@@ -1,0 +1,50 @@
+{{define "login"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/manager/public/style/general.css">
+    <link rel="stylesheet" href="/manager/public/style/form.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <header>
+    </header>
+    <div id="content">
+        <div id="formcontainer">
+
+            <div id="form">
+                <h1>Autopark</h1>
+                <div>
+                    <input type="text" id="manager-login" name="login" required placeholder="your login">
+                </div>
+                <div>
+                    <input type="password" id="manager-password" name="password" required placeholder="your password">
+                </div>
+                <button id="submit-manager-login">Authenticate</button>
+
+                <figure aria-hidden="true">
+                    <div class="person-body"></div>
+                    <div class="neck skin"></div>
+                    <div class="head skin">
+                        <div class="eyes"></div>
+                        <div class="mouth"></div>
+                    </div>
+                    <div class="hair"></div>
+                    <div class="ears"></div>
+                    <div class="shirt-1"></div>
+                    <div class="shirt-2"></div>
+                </figure>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script type="module" src="/manager/public/script/http/http.js"></script>
+<script type="module" src="/manager/public/script/managers/login.js"></script>
+</html>
+{{end}}
