@@ -20,8 +20,10 @@ INSERT INTO ADMINS VALUES(default, 'admin', 'admin');
 INSERT INTO ADMINS VALUES(default, 'admin1', 'admin1');
 INSERT INTO ADMINS VALUES(default, 'admin2', 'admin2');
 
-INSERT INTO MANAGERS VALUES(default, 'manager', 'manager');
-INSERT INTO MANAGERS VALUES(default, 'manager1', 'manager1');
+
+INSERT INTO MANAGERS VALUES(DEFAULT, 'alex', 'pirogov');
+INSERT INTO MANAGERS VALUES(DEFAULT, 'ivan', 'borisov');
+INSERT INTO MANAGERS VALUES(DEFAULT, 'andrei', 'ivanov');
 
 INSERT INTO CLIENTS VALUES(default, 'client', 'client');
 INSERT INTO CLIENTS VALUES(default, 'client1', 'client1');

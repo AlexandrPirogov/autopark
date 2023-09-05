@@ -19,7 +19,7 @@ func LoginManager(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
+	log.Warn().Msgf("got login manager body %s", body)
 	var c Creds
 	marshalErr := json.Unmarshal(body, &c)
 	if marshalErr != nil {
