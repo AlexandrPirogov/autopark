@@ -1,10 +1,15 @@
 // enterprise package works with enterprise entity
 package enterprise
 
-import "strings"
+import (
+	"enterprise-service/internal/client"
+	"strings"
+)
 
 type Enterprise struct {
-	Title string `json:"title"`
+	ID       int              `json:"id"`
+	Title    string           `json:"title"`
+	Managers []client.Manager `json:"managers"`
 }
 
 func (e Enterprise) Compare(with Enterprise) int {

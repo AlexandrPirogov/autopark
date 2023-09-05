@@ -42,8 +42,8 @@ func Delete(pattern enterprise.Enterprise, s db.EntepriseStorer) error {
 // Pre-cond: given pattern and Storer to returns enterprise entities from
 //
 // Post-cond: all enterprises which matches given pattern was returned from given EntepriseStorer
-func Read(pattern enterprise.Enterprise, s db.EntepriseStorer) (std.Linked[enterprise.Enterprise], error) {
-	return s.Read(pattern)
+func Read(s db.EntepriseStorer) (std.Linked[enterprise.Enterprise], error) {
+	return s.Read()
 }
 
 // ReadByID returns enterprise entity with given id from given EnterpriseStore which mathces given pattern
@@ -51,8 +51,8 @@ func Read(pattern enterprise.Enterprise, s db.EntepriseStorer) (std.Linked[enter
 // Pre-cond: given positive id and Storer to returns terprise entities from
 //
 // Post-cond: returnes enterprise with given ID from EnterpriseStorer
-func ReadByID(id int, s db.EntepriseStorer) (enterprise.Enterprise, error) {
-	return s.ReadByID(id)
+func ReadByTitle(title string, s db.EntepriseStorer) (enterprise.Enterprise, error) {
+	return s.ReadByTitle(title)
 }
 
 // Store writes given enterprise entity to given EnterpriseStore

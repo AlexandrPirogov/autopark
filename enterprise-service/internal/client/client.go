@@ -1,4 +1,4 @@
-// package client hold URLs and interface ManagerHandler for requests 
+// package client hold URLs and interface ManagerHandler for requests
 package client
 
 // ApiGateway URL
@@ -9,13 +9,13 @@ const RegisterManagerURL = "/auth/register/manager"
 
 const RerfeshTokenCookieField = "refresh-token"
 
-const JWTSecret = "super-secret-auth-key"
-
 type Manager struct {
-	Id           int    `json:"id"`
-	EnterpriseID int    `json:"e_id"`
-	Login        string `json:"login"`
-	Pwd          string `json:"pwd"`
+	Id              int    `json:"id"`
+	EnterpriseTitle string `json:"e_title"`
+	Name            string `json:"name"`
+	Surname         string `json:"surname"`
+	Login           string `json:"login"`
+	Pwd             string `json:"pwd"`
 }
 
 type ManagerHandler interface {

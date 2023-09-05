@@ -32,14 +32,14 @@ type EntepriseStorer interface {
 	//
 	// Post-cond: all enterprises which matches given pattern was returned.
 	// If successfull error equals nil, otherwise returns error
-	Read(e enterprise.Enterprise) (std.Linked[enterprise.Enterprise], error)
+	Read() (std.Linked[enterprise.Enterprise], error)
 
 	// ReadByID returns enterprise entity with given id
 	//
 	// Pre-cond: given positive id
 	//
 	// Post-cond: returnes enterprise with given ID from EnterpriseStorer
-	ReadByID(id int) (enterprise.Enterprise, error)
+	ReadByTitle(title string) (enterprise.Enterprise, error)
 
 	// StoreEnterprise writes given enterprise entity
 	//

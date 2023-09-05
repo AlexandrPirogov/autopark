@@ -4,6 +4,7 @@ package postgres
 import (
 	"context"
 	"enterprise-service/internal/client"
+	"enterprise-service/internal/config"
 	"enterprise-service/internal/enterprise"
 	"enterprise-service/internal/std"
 	"enterprise-service/internal/std/list"
@@ -41,7 +42,8 @@ type pgconn struct {
 // Post-cond: EnterpriseStorer assign given manager to enterprise.
 // If successfull, returns nil otherwise returns error
 func (pg *pgconn) AssignManager(m client.Manager) error {
-	_, err := pg.conn.Exec(context.Background(), QueryAssignManager, m.EnterpriseID, m.Id)
+	log.Warn().Msgf("assigning manager %v to postgres", m)
+	_, err := pg.conn.Exec(context.Background(), QueryAssignManager, m.EnterpriseTitle, m.Name, m.Surname)
 	if err != nil {
 		return err
 	}
@@ -64,17 +66,17 @@ func (pg *pgconn) Delete(e enterprise.Enterprise) error {
 //
 // Post-cond: all enterprises which matches given pattern was returned.
 // If successfull error equals nil, otherwise returns error
-func (pg *pgconn) Read(e enterprise.Enterprise) (std.Linked[enterprise.Enterprise], error) {
+func (pg *pgconn) Read() (std.Linked[enterprise.Enterprise], error) {
 	rows, err := pg.conn.Query(context.Background(), QueryReadEnterprises)
 	if err != nil {
 		log.Warn().Msgf("%v", err)
 		return nil, err
 	}
-
+	defer rows.Close()
 	res := list.New[enterprise.Enterprise]()
 	for rows.Next() {
 		var e enterprise.Enterprise
-		scanErr := rows.Scan(&e.Title)
+		scanErr := rows.Scan(&e.ID, &e.Title)
 		if scanErr != nil {
 			log.Warn().Msgf("%v", err)
 			continue
@@ -90,9 +92,32 @@ func (pg *pgconn) Read(e enterprise.Enterprise) (std.Linked[enterprise.Enterpris
 // Pre-cond: given positive id
 //
 // Post-cond: returnes enterprise with given ID from EnterpriseStorer
-func (pg *pgconn) ReadByID(id int) (enterprise.Enterprise, error) {
+func (pg *pgconn) ReadByTitle(title string) (enterprise.Enterprise, error) {
 	var e enterprise.Enterprise
-	err := pg.conn.QueryRow(context.Background(), QueryReadByIDEnterprises, id).Scan(&e.Title)
+	err := pg.conn.QueryRow(context.Background(), QueryReadByTitleEnterprises, title).Scan(&e.ID, &e.Title)
+	if err != nil {
+		log.Warn().Msgf("err while executing read by title %v", err)
+		return e, err
+	}
+
+	rows, err := pg.conn.Query(context.Background(), QueryReadByTitleEnterprisesManagers, title)
+	if err != nil {
+		log.Warn().Msgf("err while executing read by title %v", err)
+		return e, err
+	}
+
+	defer rows.Close()
+	for rows.Next() {
+		var m client.Manager
+		scanErr := rows.Scan(&m.Name, &m.Surname)
+		if scanErr != nil {
+			log.Warn().Msgf("err while scanning managers%v", err)
+			continue
+		}
+
+		e.Managers = append(e.Managers, m)
+	}
+	log.Warn().Msgf("read by title result %v", e)
 	return e, err
 }
 
@@ -102,7 +127,9 @@ func (pg *pgconn) ReadByID(id int) (enterprise.Enterprise, error) {
 //
 // Post-cond: given enterprise entity was written
 func (pg *pgconn) StoreEnterprise(e enterprise.Enterprise) error {
+	log.Warn().Msgf("registering %v", e)
 	_, err := pg.conn.Exec(context.Background(), QueryStoreEnterprise, e.Title)
+	log.Warn().Msgf("registering err %v", err)
 	if err != nil {
 		return err
 	}
@@ -119,7 +146,7 @@ func new() *pgconn {
 // tryConnect tryies to connect to postgres
 // if failed throws an exeption
 func tryConnect() *pgxpool.Pool {
-	URL := "postgresql://postgres:postgres@enterprise-db:5432/postgres"
+	URL := config.PostgresURL()
 	conn, err := pgxpool.New(context.Background(), URL)
 	if err != nil {
 		log.Fatal().Msgf("%v", err)

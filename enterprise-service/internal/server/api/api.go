@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/json"
 	"enterprise-service/internal/client"
-	"enterprise-service/internal/client/rest"
 	"enterprise-service/internal/db"
 	"enterprise-service/internal/enterprise"
 	"enterprise-service/internal/kernel"
@@ -11,7 +10,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/rs/zerolog/log"
@@ -28,12 +26,14 @@ func RegisterEnterprise(w http.ResponseWriter, r *http.Request) {
 	var e enterprise.Enterprise
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
+		log.Warn().Msgf("err while reading response %v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	marhsalErr := json.Unmarshal(body, &e)
 	if marhsalErr != nil {
+		log.Warn().Msgf("err while unmarshal %v", marhsalErr)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -62,22 +62,7 @@ func DeleteEnterprise(w http.ResponseWriter, r *http.Request) {
 //
 // Post-cond: returns list of matched enterprises
 func ReadEnerprises(w http.ResponseWriter, r *http.Request) {
-	var e enterprise.Enterprise
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		log.Warn().Msgf("%v", err)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	marhsalErr := json.Unmarshal(body, &e)
-	if marhsalErr != nil {
-		log.Warn().Msgf("%v", marhsalErr)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	list, storeErr := kernel.Read(e, db.GetConnInstance())
+	list, storeErr := kernel.Read(db.GetConnInstance())
 	if storeErr != nil {
 		log.Warn().Msgf("%v", storeErr)
 		w.WriteHeader(http.StatusBadRequest)
@@ -98,15 +83,9 @@ func ReadEnerprises(w http.ResponseWriter, r *http.Request) {
 //
 // Post-cond: returns list of matched enterprises
 func ReadEnerprise(w http.ResponseWriter, r *http.Request) {
-	idstr := chi.URLParam(r, "id")
-	id, convErr := strconv.Atoi(idstr)
-	if convErr != nil {
-		log.Warn().Msgf("%v", convErr)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	title := chi.URLParam(r, "title")
 
-	res, readErr := kernel.ReadByID(id, db.GetConnInstance())
+	res, readErr := kernel.ReadByTitle(title, db.GetConnInstance())
 	if readErr != nil {
 		log.Warn().Msgf("%v", readErr)
 		w.WriteHeader(http.StatusBadRequest)
@@ -121,59 +100,6 @@ func ReadEnerprise(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write(responseBody)
-}
-
-// RegisterManagers regsiter new manager in auth-service
-func RegisterManager(w http.ResponseWriter, r *http.Request) {
-	idstr := chi.URLParam(r, "id")
-	id, convErr := strconv.Atoi(idstr)
-	if convErr != nil {
-		log.Warn().Msgf("%v", convErr)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	var m client.Manager
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		log.Warn().Msgf("%v", err)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	marhsalErr := json.Unmarshal(body, &m)
-	if marhsalErr != nil {
-		log.Warn().Msgf("%v", marhsalErr)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	token, _ := retrieveRefreshToken(r)
-	res, err := kernel.RegisterManager(m, rest.New(token))
-	if err != nil {
-		log.Warn().Msgf("%v", err)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	res.EnterpriseID = id
-	assignErr := kernel.AssignManager(res, db.GetConnInstance())
-	if assignErr != nil {
-		log.Warn().Msgf("%v", assignErr)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	log.Printf("register response %v", res)
-	responseBody, marshalErr := json.Marshal(res)
-	if marshalErr != nil {
-		log.Warn().Msgf("%v", marshalErr)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	w.WriteHeader(http.StatusCreated)
 	w.Write(responseBody)
 }
 

@@ -48,7 +48,7 @@ func RedisPwd() string {
 
 // returns postgres url to connect to
 func PostgresURL() string {
-	return "postgresql://" + postgres_user + ":" + postgres_pwd + "@postgres-booking:5432/" + postgres_db
+	return "postgresql://" + postgres_user + ":" + postgres_pwd + "@postgres-enterprise:5432/" + postgres_db
 }
 
 func LogLevelMap() map[string]zerolog.Level {

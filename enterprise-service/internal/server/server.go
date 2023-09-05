@@ -39,9 +39,10 @@ func (s *server) Shutdown(ctx context.Context) error {
 func New(ctx context.Context) *server {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
+	r.Post("/read/{title}", api.ReadEnerprise)
 	r.Post("/register", api.RegisterEnterprise)
-	r.Get("/{id}/list", api.ReadEnerprise)
-	r.Post("/{id}/register/manager", api.RegisterManager)
+	r.Post("/register/manager", api.RegisterManager)
+	//r.Post("/list/manager", api.ListManagers)
 	r.Post("/list", api.ReadEnerprises)
 	return &server{
 		http: &http.Server{
