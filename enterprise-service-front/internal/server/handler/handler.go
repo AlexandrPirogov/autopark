@@ -37,10 +37,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func APILogin(w http.ResponseWriter, r *http.Request) {
-
-}
-
 func retrieveRefreshToken(r *http.Request) (string, error) {
 	var cookie *http.Cookie
 	cookie, err := r.Cookie(client.RerfeshTokenCookieField)
