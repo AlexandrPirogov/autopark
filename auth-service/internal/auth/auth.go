@@ -53,12 +53,15 @@ func RegisterManager(login, pwd string, s db.CredentionalsStorer) (int, error) {
 // Post-cond: if creds are correct - generate refresh token and returns it with nil
 // Otherwise returns empty string and error
 func VerifyManagerCredentionals(login, pwd string, s db.CredentionalsStorer) (string, error) {
-	_, err := s.LookForManager(login, pwd)
+	id, err := s.LookForManager(login, pwd)
 	if err != nil {
 		return "", fmt.Errorf("not found")
 	}
 
-	refresh, err := jwt.GenerateRefreshToken()
+	claims := map[string]any{
+		"id": id,
+	}
+	refresh, err := jwt.GenerateRefreshWithClaimsToken(claims)
 	if err != nil {
 		return "", err
 	}
