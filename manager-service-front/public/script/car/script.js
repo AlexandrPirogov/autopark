@@ -1,26 +1,23 @@
 import { Request, POST } from "/manager/public/script/http/http.js"
 
 window.onload = function () {
-    var taskCreateSubmitBtn = document.getElementById("submit-manager-register")
+    var registerCarBtn = document.getElementById("submit-car-register")
 
-    taskCreateSubmitBtn.addEventListener("click", managerRegisterEvent)
+    registerCarBtn.addEventListener("click", carRegisterEvent)
 }
 
-var managerRegisterEvent = function () {
-    var name = document.getElementById("manager-name").value
-    var surname = document.getElementById("manager-surname").value
-    var login = document.getElementById("manager-login").value
-    var password = document.getElementById("manager-password").value
+var carRegisterEvent = function () {
+    var uid = document.getElementById("car-uid").value
+    var type = document.getElementById("car-type").value
+    var brand = document.getElementById("car-brand").value
 
-    var manager = {
-        "name": name,
-        "surname": surname,
-        "login": login,
-        "pwd": password,
-        "e_title": title
+    var car = {
+        "uid": uid,
+        "type": type,
+        "brand": brand,
     }
-    console.log(JSON.stringify(manager))
-    Request(POST, "/enterprise/api/enterprises/" + title + "/register/manager", manager, function () {
+    console.log(JSON.stringify(car))
+    Request(POST, "/manager/api/car/register", car, function () {
         window.location = window.location
     }
     )

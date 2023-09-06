@@ -7,6 +7,7 @@ const ApiGatewayHost = "http://api-gateway-nginx"
 // Lists brandss
 const AuthenticateURL = "/auth/login/manager"
 
+const RegisterCarURL = "/autopark/car/register"
 const ListCarsURL = "/autopark/car/list"
 
 const RerfeshTokenCookieField = "refresh-token"

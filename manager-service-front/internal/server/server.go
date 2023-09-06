@@ -22,6 +22,7 @@ func New(ctx context.Context) *http.Server {
 	fs := http.FileServer(http.Dir("./public/"))
 	r.Handle("/public/*", http.StripPrefix("/public/", fs))
 
+	r.Post("/api/car/register", handler.RegisterCarAPI)
 	r.Post("/api/login", handler.LoginAPI)
 
 	r.Get("/login", handler.Login)

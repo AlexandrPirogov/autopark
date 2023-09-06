@@ -45,6 +45,16 @@ func (r *rest) ListCars() ([]client.Car, error) {
 	return res, err
 }
 
+func (r *rest) RegisterCar(car []byte) error {
+	response, respErr := r.executeRequest(http.MethodPost, client.ApiGatewayHost+client.RegisterCarURL, car)
+	if respErr != nil {
+		log.Warn().Msgf("%v", respErr)
+		return respErr
+	}
+	defer response.Body.Close()
+	return nil
+}
+
 func (r *rest) ListBrands() ([]client.Car, error) {
 	response, respErr := r.executeRequest(http.MethodPost, client.ApiGatewayHost+client.ListCarsURL, nil)
 	if respErr != nil {

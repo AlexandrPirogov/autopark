@@ -3,13 +3,11 @@
 }
 
 body {
-    background-color: white;
-
+    background-image: url("https://img.freepik.com/premium-vector/dotted-simple-seamless-vector-pattern_547648-1241.jpg");
 }
 
 header {
     padding-top: 50px;
-    background-color: rgb(248, 250, 250);
 }
 
 header nav {
@@ -48,6 +46,13 @@ body #content {
     width: 50%;
 }
 
+#content #inner-left h1{
+    text-align: center;
+    font-size: 35px;
+    padding-top: 10px;
+}
+
+
 
 #content #inner-right {
     text-align: center;
@@ -58,8 +63,13 @@ body #content {
     justify-content: space-between;
     flex-flow: row wrap;
 
-    background-color: white;
+    
+    background-color: rgb(248, 250, 250);
+    border-radius: 15px;
     margin: auto;
+    border:1px solid black;
+
+    padding-bottom: 50px;
 }
 
 #container #element {

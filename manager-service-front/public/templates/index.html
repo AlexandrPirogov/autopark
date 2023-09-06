@@ -33,27 +33,47 @@
             </div>
         </div>
         <div id="inner-right">
-            <h1>Register new manager</h1>
-            <div id="formcontainer">
-                <div id="form">
-                    <div class="formblock">
-                        <label for="uid">uid:</label>
-                        <input type="text" id="car-uid" name="uid" maxlength="8">
-                    </div>
-                    <div class="formblock">
-                        <label for="type">Type:</label>
-                        <select name="type" id="">
-                            <option value="sedan">sedan</option>
-                            <option value="sport">sport</option>
-                            <option value="hatchback">hatchback</option>
-                        </select>
-                    </div>
-                    <div class="formblock">
-                        <button id="submit-manager-register">Add</button>
-                    </div>
-
-
-                    </form>
+            <div class="formbold-main-wrapper">
+                <!-- Author: FormBold Team -->
+                <!-- Learn More: https://formbold.com -->
+                <div class="formbold-form-wrapper">
+        
+                    <h2 class="">Car registration</h2>
+                    <img width="400px" src="https://www.seekpng.com/png/detail/64-642874_ford-clipart-transparent-car-vector-icon-png.png">
+        
+                        <div class="formbold-form-title">
+                            <p>
+                                Input car's UID, Type and brand
+                            </p>
+                        </div>
+        
+                        <div class="formbold-input-flex">
+                            <div>
+                                <label for="car-uid" class="formbold-form-label">
+                                    Car UID
+                                </label>
+                                <input type="text" name="car-uid" id="car-uid" class="formbold-form-input" />
+                            </div>
+                            <div>
+                                <label for="car-type" class="formbold-form-label"> Type </label>
+                                <select class="formbold-form-input"  id="car-type">
+                                    <option value="sedan">sedan</option>
+                                    <option value="hatchback">hatchback</option>
+                                    <option value="sport">sport</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="brand" class="formbold-form-label"> Brand </label>
+                                <select class="formbold-form-input"  id="brand">
+                                    <option value="LADA">LADA</option>
+                                    <option value="GAZ">GAZ</option>
+                                </select>
+                            </div>
+                        </div>
+        
+        
+        
+                        <button class="formbold-btn" id="submit-car-register">Register</button>
                 </div>
             </div>
         </div>

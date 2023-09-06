@@ -13,38 +13,46 @@
 <body>
     <header>
     </header>
-    <div id="content">
-        <div id="formcontainer">
 
-            <div id="form">
-                <h1>Autopark</h1>
-                <div>
-                    <input type="text" id="manager-login" name="login" required placeholder="your login">
-                </div>
-                <div>
-                    <input type="password" id="manager-password" name="password" required placeholder="your password">
-                </div>
-                <button id="submit-manager-login">Authenticate</button>
+    <div class="formbold-main-wrapper">
+        <!-- Author: FormBold Team -->
+        <!-- Learn More: https://formbold.com -->
+        <div class="formbold-form-wrapper">
 
-                <figure aria-hidden="true">
-                    <div class="person-body"></div>
-                    <div class="neck skin"></div>
-                    <div class="head skin">
-                        <div class="eyes"></div>
-                        <div class="mouth"></div>
+            <img width="400px" src="https://cdn-icons-png.flaticon.com/512/4206/4206265.png">
+
+                <div class="formbold-form-title">
+                    <h2 class="">You are welcome!</h2>
+                    <p>
+                        Autopark is the greatest spot of cars to book!
+                    </p>
+                </div>
+
+                <div class="formbold-input-flex">
+                    <div>
+                        <label for="manager-login" class="formbold-form-label">
+                            Login
+                        </label>
+                        <input type="text" name="manager-login" id="manager-login" class="formbold-form-input" />
                     </div>
-                    <div class="hair"></div>
-                    <div class="ears"></div>
-                    <div class="shirt-1"></div>
-                    <div class="shirt-2"></div>
-                </figure>
-                </form>
-            </div>
+                    <div>
+                        <label for="manager-password" class="formbold-form-label"> Last name </label>
+                        <input type="password" name="manager-password" id="manager-password" class="formbold-form-input" />
+                    </div>
+                </div>
+
+
+
+                <button class="formbold-btn" id="submit-manager-login">Login</button>
         </div>
     </div>
+    <style>
+
+    </style>
 </body>
 
 <script type="module" src="/manager/public/script/http/http.js"></script>
 <script type="module" src="/manager/public/script/managers/login.js"></script>
+
 </html>
 {{end}}
